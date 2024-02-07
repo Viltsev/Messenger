@@ -3,13 +3,14 @@ package com.engmes.EnglishMessenger.Chats.controllers;
 import com.engmes.EnglishMessenger.Chats.model.ChatMessage;
 import com.engmes.EnglishMessenger.Chats.model.ChatRoom;
 import com.engmes.EnglishMessenger.Chats.model.User;
-import com.engmes.EnglishMessenger.Chats.services.ChatRoomService;
-import com.engmes.EnglishMessenger.Chats.services.UserService;
+import com.engmes.EnglishMessenger.Chats.services.chatRoomService.ChatRoomService;
+import com.engmes.EnglishMessenger.Chats.services.userService.UserService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -62,6 +63,15 @@ public class UserController {
         ChatRoom recipientChatRoom = chatRoom;
         updateUserChatRoom(recipient, recipientChatRoom);
 
+        // set chatId and save chat
+
+        if (chatRoom.getChatId() == null) {
+            String chatId = generateChatId(sender.getEmail(), recipient.getEmail());
+            chatRoom.setChatId(chatId);
+        }
+
+        chatRoomService.saveChat(chatRoom);
+
         return "Chat successfully saved!";
     }
 
@@ -69,7 +79,9 @@ public class UserController {
     public String saveMessage(@RequestBody ChatMessage chatMessage) {
 
         // todo: find chat by chatId
-        // ChatRoom chatRoom
+        String chatId = generateChatId(chatMessage.getSenderId(), chatMessage.getRecipientId());
+        ChatRoom chatRoom = chatRoomService.findChatById(chatId);
+        updateChatRoomMessage(chatRoom, chatMessage);
 
         return "Message successfully saved!";
     }
@@ -79,7 +91,19 @@ public class UserController {
         chatRoomList.add(chatRoom);
         user.setChatRoomList(chatRoomList);
         service.updateUser(user);
-        chatRoomService.saveChat(chatRoom);
+    }
+
+    private void updateChatRoomMessage(ChatRoom chatRoom, ChatMessage chatMessage) {
+        List<ChatMessage> chatMessageList = chatRoom.getChatMessageList();
+        chatMessageList.add(chatMessage);
+        chatRoom.setChatMessageList(chatMessageList);
+        chatRoomService.updateChatRoom(chatRoom);
+    }
+
+    private String generateChatId(String senderId, String recipientId) {
+        String[] ids = {senderId, recipientId};
+        Arrays.sort(ids);
+        return ids[0] + ids[1];
     }
 
     @GetMapping("/fetchAllChats/{email}")

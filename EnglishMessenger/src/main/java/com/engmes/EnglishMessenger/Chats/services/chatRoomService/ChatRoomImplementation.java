@@ -1,9 +1,8 @@
-package com.engmes.EnglishMessenger.Chats.services;
+package com.engmes.EnglishMessenger.Chats.services.chatRoomService;
 
-import com.engmes.EnglishMessenger.Chats.controllers.WebSocketEventListener;
 import com.engmes.EnglishMessenger.Chats.model.ChatRoom;
-import com.engmes.EnglishMessenger.Chats.model.User;
 import com.engmes.EnglishMessenger.Chats.repo.ChatRoomRepository;
+import jakarta.persistence.EntityManager;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +17,7 @@ import java.util.stream.Stream;
 @Primary
 public class ChatRoomImplementation implements ChatRoomService {
     private final ChatRoomRepository repository;
+    private EntityManager entityManager;
     private static final Logger logger = LoggerFactory.getLogger(ChatRoomImplementation.class);
     @Override
     public ChatRoom saveChat(ChatRoom chatRoom) {
@@ -31,5 +31,17 @@ public class ChatRoomImplementation implements ChatRoomService {
         return chatRooms.stream().filter(chatRoom ->
             chatRoom.getSenderId().equals(email) || chatRoom.getRecipientId().equals(email)
         );
+    }
+
+    @Override
+    public ChatRoom findChatById(String chatId) {
+        return entityManager.createQuery("SELECT c FROM ChatRoom c WHERE c.chatId = :chatId", ChatRoom.class)
+                .setParameter("chatId", chatId)
+                .getSingleResult();
+    }
+
+    @Override
+    public ChatRoom updateChatRoom(ChatRoom chatRoom) {
+        return repository.save(chatRoom);
     }
 }

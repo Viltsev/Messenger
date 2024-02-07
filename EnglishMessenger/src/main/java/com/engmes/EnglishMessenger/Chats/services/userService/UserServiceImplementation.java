@@ -1,7 +1,8 @@
-package com.engmes.EnglishMessenger.Chats.services;
+package com.engmes.EnglishMessenger.Chats.services.userService;
 
 import com.engmes.EnglishMessenger.Chats.model.User;
 import com.engmes.EnglishMessenger.Chats.repo.UsersRepository;
+import com.engmes.EnglishMessenger.Chats.services.userService.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,20 @@
 package com.engmes.EnglishMessenger.Chats.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Entity
+@Table(name = "chatmessage")
 public class ChatMessage {
+    @Id
+    @GeneratedValue
+    private Long id;
     private MessageType type;
     private String content;
     private String sender;

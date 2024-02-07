@@ -1,4 +1,4 @@
-package com.engmes.EnglishMessenger.Chats.services;
+package com.engmes.EnglishMessenger.Chats.services.userService;
 
 import com.engmes.EnglishMessenger.Chats.model.User;
 
