@@ -25,7 +25,6 @@ public class UserController {
 
     @GetMapping("/fetchAllUsers/{email}")
     public Stream<User> findAllStudent(@PathVariable String email) {
-        // todo
         return service.findAllUsers(email);
     }
 
@@ -40,6 +39,11 @@ public class UserController {
         return service.findByEmail(email);
     }
 
+    @GetMapping("/findFriend/{email}")
+    public User findFriendByEmail(@PathVariable String email) {
+        return service.findByEmail(email);
+    }
+
     @PutMapping("update_user")
     public User updateStudent(User user) {
         return service.updateUser(user);
@@ -50,60 +54,34 @@ public class UserController {
         service.deleteUser(email);
     }
 
-    @PostMapping("save_chatroom")
+    @PostMapping("create_chatroom")
     public String saveChat(@RequestBody ChatRoom chatRoom) {
-
-        // sender update
         User sender = service.getUserByEmail(chatRoom.getSenderId());
-        ChatRoom senderChatRoom = chatRoom;
-        updateUserChatRoom(sender, senderChatRoom);
-
-        // recipient update
         User recipient = service.getUserByEmail(chatRoom.getRecipientId());
+        ChatRoom senderChatRoom = chatRoom;
         ChatRoom recipientChatRoom = chatRoom;
-        updateUserChatRoom(recipient, recipientChatRoom);
 
-        // set chatId and save chat
-
-        if (chatRoom.getChatId() == null) {
-            String chatId = generateChatId(sender.getEmail(), recipient.getEmail());
+        String chatId = generateChatId(sender.getEmail(), recipient.getEmail());
+        ChatRoom checkChat = chatRoomService.findChatById(chatId);
+        if (checkChat == null) {
+            updateUserChatRoom(sender, senderChatRoom);
+            updateUserChatRoom(recipient, recipientChatRoom);
             chatRoom.setChatId(chatId);
+            chatRoomService.saveChat(chatRoom);
+            return "Chat successfully saved!";
+        } else {
+            return "You have the same chat! Error";
         }
-
-        chatRoomService.saveChat(chatRoom);
-
-        return "Chat successfully saved!";
     }
 
     @PostMapping("save_message")
     public String saveMessage(@RequestBody ChatMessage chatMessage) {
-
-        // todo: find chat by chatId
-        String chatId = generateChatId(chatMessage.getSenderId(), chatMessage.getRecipientId());
+        String chatId = generateChatId(chatMessage.getSenderId(),
+                chatMessage.getRecipientId());
         ChatRoom chatRoom = chatRoomService.findChatById(chatId);
         updateChatRoomMessage(chatRoom, chatMessage);
 
         return "Message successfully saved!";
-    }
-
-    private void updateUserChatRoom(User user, ChatRoom chatRoom) {
-        List<ChatRoom> chatRoomList = user.getChatRoomList();
-        chatRoomList.add(chatRoom);
-        user.setChatRoomList(chatRoomList);
-        service.updateUser(user);
-    }
-
-    private void updateChatRoomMessage(ChatRoom chatRoom, ChatMessage chatMessage) {
-        List<ChatMessage> chatMessageList = chatRoom.getChatMessageList();
-        chatMessageList.add(chatMessage);
-        chatRoom.setChatMessageList(chatMessageList);
-        chatRoomService.updateChatRoom(chatRoom);
-    }
-
-    private String generateChatId(String senderId, String recipientId) {
-        String[] ids = {senderId, recipientId};
-        Arrays.sort(ids);
-        return ids[0] + ids[1];
     }
 
     @GetMapping("/fetchAllChats/{email}")
@@ -111,4 +89,25 @@ public class UserController {
         return chatRoomService.findAllChats(email);
     }
 
+
+    // Additional methods
+    void updateUserChatRoom(User user, ChatRoom chatRoom) {
+        List<ChatRoom> chatRoomList = user.getChatRoomList();
+        chatRoomList.add(chatRoom);
+        user.setChatRoomList(chatRoomList);
+        service.updateUser(user);
+    }
+
+    void updateChatRoomMessage(ChatRoom chatRoom, ChatMessage chatMessage) {
+        List<ChatMessage> chatMessageList = chatRoom.getChatMessageList();
+        chatMessageList.add(chatMessage);
+        chatRoom.setChatMessageList(chatMessageList);
+        chatRoomService.updateChatRoom(chatRoom);
+    }
+
+    String generateChatId(String senderId, String recipientId) {
+        String[] ids = {senderId, recipientId};
+        Arrays.sort(ids);
+        return ids[0] + ids[1];
+    }
 }

@@ -21,13 +21,4 @@ public class ChatRoom {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "chat_id")
     private List<ChatMessage> chatMessageList;
-
-//    private String generateChatId(String senderId, String recipientId) {
-//        if (chatId == null) {
-//            String[] ids = {senderId, recipientId};
-//            Arrays.sort(ids);
-//            chatId = ids[0] + ids[1];
-//        }
-//        return chatId;
-//    }
 }

@@ -3,6 +3,7 @@ package com.engmes.EnglishMessenger.Chats.services.chatRoomService;
 import com.engmes.EnglishMessenger.Chats.model.ChatRoom;
 import com.engmes.EnglishMessenger.Chats.repo.ChatRoomRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,9 +36,13 @@ public class ChatRoomImplementation implements ChatRoomService {
 
     @Override
     public ChatRoom findChatById(String chatId) {
-        return entityManager.createQuery("SELECT c FROM ChatRoom c WHERE c.chatId = :chatId", ChatRoom.class)
-                .setParameter("chatId", chatId)
-                .getSingleResult();
+        try {
+            return entityManager.createQuery("SELECT c FROM ChatRoom c WHERE c.chatId = :chatId", ChatRoom.class)
+                    .setParameter("chatId", chatId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     @Override

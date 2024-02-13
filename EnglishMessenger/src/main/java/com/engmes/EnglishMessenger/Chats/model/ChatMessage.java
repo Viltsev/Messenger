@@ -8,62 +8,25 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @Entity
 @Table(name = "chatmessage")
+@AllArgsConstructor
 public class ChatMessage {
     @Id
     @GeneratedValue
     private Long id;
-    private MessageType type;
-    private String content;
-    private String sender;
-    private String senderId;
-    private String recipientId;
+    private String content; // text of message
+    private String sender; // full name of sender
+    private String recipient; // full name of recipient
+    private String senderId; // email of sender
+    private String recipientId; // email of recipient
+    private Date date; // date of message
+    private Boolean isRead; // isRead message
 
-    public enum MessageType {
-        CHAT,
-        JOIN,
-        LEAVE
-    }
+    public ChatMessage() {
 
-    public String getSenderId() {
-        return senderId;
-    }
-
-    public void setSenderId(String senderId) {
-        this.senderId = senderId;
-    }
-
-    public String getRecipientId() {
-        return recipientId;
-    }
-
-    public void setRecipientId(String recipientId) {
-        this.recipientId = recipientId;
-    }
-
-    public MessageType getType() {
-        return type;
-    }
-
-    public void setType(MessageType type) {
-        this.type = type;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getSender() {
-        return sender;
-    }
-
-    public void setSender(String sender) {
-        this.sender = sender;
     }
 }
