@@ -2,9 +2,9 @@ package com.engmes.EnglishMessenger.Chats.controllers;
 
 import com.engmes.EnglishMessenger.Chats.model.ChatMessage;
 import com.engmes.EnglishMessenger.Chats.model.ChatRoom;
-import com.engmes.EnglishMessenger.Chats.model.User;
+import com.engmes.EnglishMessenger.Chats.model.UserChats;
 import com.engmes.EnglishMessenger.Chats.services.chatRoomService.ChatRoomService;
-import com.engmes.EnglishMessenger.Chats.services.userService.UserService;
+import com.engmes.EnglishMessenger.Chats.services.userService.UserServiceChats;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,36 +17,36 @@ import java.util.stream.Stream;
 @RestController
 @RequestMapping("/api/v1/users")
 @AllArgsConstructor
-public class UserController {
+public class UserControllerChats {
 
-    private final UserService service;
+    private final UserServiceChats service;
     private final ChatRoomService chatRoomService;
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserControllerChats.class);
 
     @GetMapping("/fetchAllUsers/{email}")
-    public Stream<User> findAllStudent(@PathVariable String email) {
+    public Stream<UserChats> findAllStudent(@PathVariable String email) {
         return service.findAllUsers(email);
     }
 
     @PostMapping("register")
-    public String saveUser(@RequestBody User user) {
-        service.saveUser(user);
+    public String saveUser(@RequestBody UserChats userChats) {
+        service.saveUser(userChats);
         return "User successfully saved!";
     }
 
     @GetMapping("/authByEmail/{email}")
-    public User findByEmail(@PathVariable String email) {
+    public UserChats findByEmail(@PathVariable String email) {
         return service.findByEmail(email);
     }
 
     @GetMapping("/findFriend/{email}")
-    public User findFriendByEmail(@PathVariable String email) {
+    public UserChats findFriendByEmail(@PathVariable String email) {
         return service.findByEmail(email);
     }
 
     @PutMapping("update_user")
-    public User updateStudent(User user) {
-        return service.updateUser(user);
+    public UserChats updateStudent(UserChats userChats) {
+        return service.updateUser(userChats);
     }
 
     @DeleteMapping("delete_user/{email}")
@@ -56,8 +56,8 @@ public class UserController {
 
     @PostMapping("create_chatroom")
     public String saveChat(@RequestBody ChatRoom chatRoom) {
-        User sender = service.getUserByEmail(chatRoom.getSenderId());
-        User recipient = service.getUserByEmail(chatRoom.getRecipientId());
+        UserChats sender = service.getUserByEmail(chatRoom.getSenderId());
+        UserChats recipient = service.getUserByEmail(chatRoom.getRecipientId());
         ChatRoom senderChatRoom = chatRoom;
         ChatRoom recipientChatRoom = chatRoom;
 
@@ -91,11 +91,11 @@ public class UserController {
 
 
     // Additional methods
-    void updateUserChatRoom(User user, ChatRoom chatRoom) {
-        List<ChatRoom> chatRoomList = user.getChatRoomList();
+    void updateUserChatRoom(UserChats userChats, ChatRoom chatRoom) {
+        List<ChatRoom> chatRoomList = userChats.getChatRoomList();
         chatRoomList.add(chatRoom);
-        user.setChatRoomList(chatRoomList);
-        service.updateUser(user);
+        userChats.setChatRoomList(chatRoomList);
+        service.updateUser(userChats);
     }
 
     void updateChatRoomMessage(ChatRoom chatRoom, ChatMessage chatMessage) {

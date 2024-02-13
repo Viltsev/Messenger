@@ -3,7 +3,6 @@ package com.engmes.EnglishMessenger.Chats.controllers;
 
 import com.engmes.EnglishMessenger.Chats.model.ChatMessage;
 import com.engmes.EnglishMessenger.Chats.model.ChatRoom;
-import com.engmes.EnglishMessenger.Chats.model.User;
 import com.engmes.EnglishMessenger.Chats.services.chatRoomService.ChatRoomService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;

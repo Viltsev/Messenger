@@ -1,3 +1,4 @@
+# viltsev database
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/my_db
@@ -13,3 +14,40 @@ spring:
     properties:
       hibernate:
         format_sql: true
+jwt:
+  secretAccess: fgsdffsg456456rertr66yerty56465sdfmk68poiopz
+  secretRefresh: sssdffsg456456rertr66yerty589898ghtrcop9741b
+  lifetime: 2m
+  lifetimeRefresh: 4m
+
+# migunova database
+#spring:
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/postgres
+#    username: postgres
+#    password: migunova1405
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    database: postgresql
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    show-sql: true
+#jwt:
+#  secretAccess: fgsdffsg456456rertr66yerty56465sdfmk68poiopz
+#  secretRefresh: sssdffsg456456rertr66yerty589898ghtrcop9741b
+#  lifetime: 2m
+#  lifetimeRefresh: 4m
+
+# .properties (to delete)
+#  spring.datasource.url = jdbc:postgresql://localhost:5432/postgres
+#  spring.datasource.username = postgres
+#  spring.datasource.password = migunova1405
+#
+#  spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
+#  spring.jpa.hibernate.ddl-auto = update
+#  spring.jpa.show-sql = true
+#
+#  jwt.secretAccess=fgsdffsg456456rertr66yerty56465sdfmk68poiopz
+#  jwt.secretRefresh=sssdffsg456456rertr66yerty589898ghtrcop9741b
+#  jwt.lifetime=2m
+#  jwt.lifetimeRefresh=4m
