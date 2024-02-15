@@ -1,6 +1,7 @@
 package com.engmes.EnglishMessenger.Profile.controllers;
 
-import com.engmes.EnglishMessenger.Profile.models.Interest;
+
+import com.engmes.EnglishMessenger.Profile.model.Interest;
 import com.engmes.EnglishMessenger.Profile.repository.InterestRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

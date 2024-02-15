@@ -1,4 +1,4 @@
-package com.engmes.EnglishMessenger.Profile.models;
+package com.engmes.EnglishMessenger.Profile.model;
 
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
@@ -101,4 +101,6 @@ public class User {
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
+
+    public void setLanguageLevel(String level) { this.languageLevel = level; }
 }

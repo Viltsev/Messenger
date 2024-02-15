@@ -1,4 +1,4 @@
-package com.engmes.EnglishMessenger.Profile.models;
+package com.engmes.EnglishMessenger.Profile.model;
 
 import jakarta.persistence.*;
 

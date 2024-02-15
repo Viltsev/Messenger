@@ -1,6 +1,6 @@
 package com.engmes.EnglishMessenger.Profile.controllers;
 
-import com.engmes.EnglishMessenger.Profile.models.User;
+import com.engmes.EnglishMessenger.Profile.model.User;
 import com.engmes.EnglishMessenger.Profile.repository.UserRepository;
 import com.engmes.EnglishMessenger.Profile.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

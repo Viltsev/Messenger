@@ -17,6 +17,6 @@ public class UserChats {
     @Column(unique = true)
     private String email;
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id_chats")
     private List<ChatRoom> chatRoomList;
 }

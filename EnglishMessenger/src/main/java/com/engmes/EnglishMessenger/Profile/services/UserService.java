@@ -1,6 +1,6 @@
 package com.engmes.EnglishMessenger.Profile.services;
 
-import com.engmes.EnglishMessenger.Profile.models.User;
+import com.engmes.EnglishMessenger.Profile.model.User;
 import com.engmes.EnglishMessenger.Profile.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -57,4 +57,7 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return null;
     }
+
+    public void updateUser(User user) { userRepository.save(user); }
+
 }
