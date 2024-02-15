@@ -27,8 +27,7 @@ public class SecurityConfig {
                                 .requestMatchers("/register").permitAll()
                                 .requestMatchers("/auth").permitAll()
                                 .requestMatchers("/auth/refresh").permitAll()
-                                .anyRequest().permitAll()
-                                //.anyRequest().authenticated()
+                                .anyRequest().authenticated()
                 )
                 .logout(logout ->
                         logout.logoutUrl("/logout") // URL для выхода
