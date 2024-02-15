@@ -30,9 +30,6 @@ public class RegisterController {
 
         if (userRepository.findByEmail(user.getEmail()) == null) {
 
-            SecureRandom random = new SecureRandom();
-            byte[] salt = new byte[16];
-            random.nextBytes(salt);
             String saltString = BCrypt.gensalt();
             user.setSalt(saltString);
 
