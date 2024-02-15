@@ -26,15 +26,16 @@ public class ChatController {
     @MessageMapping("/chat.sendMessage/{chatId}")
     @SendTo("/topic/public/{chatId}")
     public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
-
-        // todo: save messages
         String chatId = generateChatId(chatMessage.getSenderId(),
                 chatMessage.getRecipientId());
         ChatRoom chatRoom = chatRoomService.findChatById(chatId);
-        updateChatRoomMessage(chatRoom, chatMessage);
-        logger.info("message successfully saved!");
-        logger.info("new message: " + chatMessage.getContent() + " from sender: " + chatMessage.getSender());
-
+        if (chatRoom != null) {
+            logger.info("\nnew message: " + chatMessage.getContent() + "\nfrom sender: " + chatMessage.getSender());
+            updateChatRoomMessage(chatRoom, chatMessage);
+            logger.info("message successfully saved!");
+        } else {
+            logger.info("there is not a such chatroom in database!");
+        }
         return chatMessage;
     }
 
