@@ -1,6 +1,6 @@
 package com.engmes.EnglishMessenger.Profile.controllers;
 
-import com.engmes.EnglishMessenger.Profile.models.User;
+import com.engmes.EnglishMessenger.Profile.model.User;
 import com.engmes.EnglishMessenger.Profile.repository.UserRepository;
 import jakarta.annotation.security.PermitAll;
 import org.slf4j.Logger;
