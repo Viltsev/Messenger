@@ -48,8 +48,8 @@ public class AuthController {
         }
 
         User user = userOptional.get();
-        String saltedPassword = user.getSalt() + authRequest.getPassword();
-        if (BCrypt.checkpw(saltedPassword, user.getPassword())) {
+        String saltedPassword = BCrypt.hashpw(authRequest.getPassword(), user.getSalt());
+        if (saltedPassword.equals(user.getPassword())) {
             UserDetails userDetails = userService.loadUserByEmail(authRequest.getEmail());
 
             String accessToken = jwtToken.generateAccessToken(userDetails);
