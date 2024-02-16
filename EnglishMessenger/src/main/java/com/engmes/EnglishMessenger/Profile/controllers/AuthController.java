@@ -30,7 +30,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
-    private static final Logger logger = LoggerFactory.getLogger(RegisterController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
     @Autowired
     private final UserService userService;
     @Autowired

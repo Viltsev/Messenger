@@ -1,9 +1,9 @@
 package com.engmes.EnglishMessenger.Profile.model;
 
 import com.engmes.EnglishMessenger.Chats.model.ChatRoom;
+import com.engmes.EnglishMessenger.Interests.model.Interest;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
@@ -37,9 +37,8 @@ public class User {
     @Column(name = "photo", nullable = true)
     private byte[] photo;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private List<Interest> interests;
+    @ElementCollection
+    private List<Long> idInterests;
 
     @Column(name = "language_level", nullable = true)
     private String languageLevel;
