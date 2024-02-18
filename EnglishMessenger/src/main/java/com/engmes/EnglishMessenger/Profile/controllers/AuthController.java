@@ -69,7 +69,7 @@ public class AuthController {
             response.addCookie(refreshTokenCookie);
 
             logger.info("Токены созданы.\n Access token: " + accessToken + "\n Refresh token: " + refreshToken);
-            return ResponseEntity.ok("Авторизация успешна");
+            return ResponseEntity.ok(user);
         } else {
             logger.info("Неверный пароль или почта для пользователя: " + authRequest.getEmail());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Неверный пароль или почта");
