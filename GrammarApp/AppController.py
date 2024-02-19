@@ -1,9 +1,17 @@
 from fastapi import FastAPI
 from CorrectionService import correctText
+from pydantic import BaseModel
 
 app = FastAPI()
 
+class Correction(BaseModel):
+    edit: str
+    replaceWord: str
+    startPosition: int
+    endPosition: int
+
 @app.get("/checkGrammar/{text}")
-async def read_item(text):
-    result = correctText(text)
-    return {"currentText": result}
+async def check_grammar(text):
+    correctionsArray = correctText(text)
+    correction_objects = [Correction(**c) for c in correctionsArray]
+    return correction_objects
