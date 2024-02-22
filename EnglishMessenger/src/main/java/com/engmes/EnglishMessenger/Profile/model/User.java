@@ -1,5 +1,6 @@
 package com.engmes.EnglishMessenger.Profile.model;
 
+import com.engmes.EnglishMessenger.Cards.models.Card;
 import com.engmes.EnglishMessenger.Chats.model.ChatRoom;
 import com.engmes.EnglishMessenger.Interests.model.Interest;
 import jakarta.persistence.*;
@@ -42,6 +43,16 @@ public class User {
 
     @Column(name = "language_level", nullable = true)
     private String languageLevel;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "card_repeat_id")
+    @Column(name = "to_repeat_cards", nullable = true)
+    private List<Card> toRepeatCards;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "card_learned_id")
+    @Column(name = "learned_cards", nullable = true)
+    private List<Card> learnedCard;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
