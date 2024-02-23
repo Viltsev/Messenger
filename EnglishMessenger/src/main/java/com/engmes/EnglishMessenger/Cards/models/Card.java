@@ -8,12 +8,13 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "cards")
+@Table(name = "card")
 public class Card {
     @Id
     @GeneratedValue
     private Long id;
-    private String toLearn;
+    private Long setId;
+    private String text;
     private String explanation;
     private String userEmail;
 }

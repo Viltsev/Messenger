@@ -1,7 +1,7 @@
 package com.engmes.EnglishMessenger.Profile.services;
 
 import com.engmes.EnglishMessenger.Cards.models.Card;
-import com.engmes.EnglishMessenger.Cards.models.CardLists;
+import com.engmes.EnglishMessenger.Cards.enums.CardLists;
 import com.engmes.EnglishMessenger.Profile.model.User;
 import com.engmes.EnglishMessenger.Profile.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -65,55 +65,4 @@ public class UserService implements UserDetailsService {
     }
 
     public void updateUser(User user) { userRepository.save(user); }
-
-    public String saveCard(Card card) {
-        String email = card.getUserEmail();
-        User userFromDB = userRepository.findByEmail(email);
-
-        if (userFromDB != null) {
-            List<Card> currentCardList = userFromDB.getCardList();
-            currentCardList.add(card);
-            userFromDB.setCardList(currentCardList);
-            userRepository.save(userFromDB);
-            return "Card successfully created";
-        } else {
-            logger.info("There is not such user in database");
-            return "Card has not been created!";
-        }
-    }
-
-    public String saveCardTo(CardLists cardLists, Card card) {
-        String email = card.getUserEmail();
-        User userFromDB = userRepository.findByEmail(email);
-
-        if (userFromDB != null) {
-            List<Card> currentRepeatedCards = userFromDB.getToRepeatCards();
-            List<Card> currentLearnedCards = userFromDB.getLearnedCard();
-
-            switch (cardLists) {
-                case SAVE_TO_REPEAT -> {
-                    currentRepeatedCards.add(card);
-                    currentLearnedCards.remove(card);
-                }
-                case SAVE_TO_LEARNED -> {
-                    currentLearnedCards.add(card);
-                    currentRepeatedCards.remove(card);
-                }
-            }
-            userFromDB.setToRepeatCards(currentRepeatedCards);
-            userFromDB.setLearnedCard(currentLearnedCards);
-
-            userRepository.save(userFromDB);
-
-            switch (cardLists) {
-                case SAVE_TO_LEARNED -> logger.info("Card successfully saved to learned list");
-                case SAVE_TO_REPEAT -> logger.info("Card successfully saved to repeat list");
-            }
-
-            return "Card successfully saved";
-        } else {
-            logger.info("There is not such user in database");
-            return "Card has not been saved!";
-        }
-    }
 }

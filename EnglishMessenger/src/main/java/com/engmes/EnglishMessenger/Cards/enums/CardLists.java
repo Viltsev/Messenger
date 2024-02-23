@@ -1,4 +1,4 @@
-package com.engmes.EnglishMessenger.Cards.models;
+package com.engmes.EnglishMessenger.Cards.enums;
 
 public enum CardLists {
     SAVE_TO_REPEAT,

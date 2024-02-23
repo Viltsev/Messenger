@@ -1,12 +1,10 @@
 package com.engmes.EnglishMessenger.Cards.controllers;
 
 import com.engmes.EnglishMessenger.Cards.models.Card;
+import com.engmes.EnglishMessenger.Cards.models.CardSet;
 import com.engmes.EnglishMessenger.Cards.services.CardService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/cards")
@@ -14,18 +12,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class CardController {
     private final CardService service;
 
-    @PostMapping("/createCard")
-    public String saveCard(@RequestBody Card card) {
-        return service.saveCard(card);
+    @PostMapping("/createCardSet")
+    public void createCardSet(@RequestBody CardSet cardSet) {
+        service.createCardSet(cardSet);
     }
 
-    @PostMapping("/save_to_repeat")
-    public String saveToRepeat(@RequestBody Card card) {
-        return service.saveToRepeatCard(card);
+    @PostMapping("/createCard")
+    public void createCard(@RequestBody Card card) {
+        service.createCard(card);
     }
 
     @PostMapping("/save_to_learned")
-    public String saveToLearned(@RequestBody Card card) {
-        return service.saveToLearnedCard(card);
+    public void saveToLearned(@RequestBody Card card) {
+        service.saveToLearnedCards(card);
+    }
+
+    @PostMapping("/refresh_set")
+    public void refreshCards(@RequestParam Long id, @RequestParam String email) {
+        service.refreshCards(id, email);
     }
 }

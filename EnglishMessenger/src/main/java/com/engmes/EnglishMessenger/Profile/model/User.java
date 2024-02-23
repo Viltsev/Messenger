@@ -1,8 +1,8 @@
 package com.engmes.EnglishMessenger.Profile.model;
 
-import com.engmes.EnglishMessenger.Cards.models.Card;
+import com.engmes.EnglishMessenger.Cards.models.CardSet;
+//import com.engmes.EnglishMessenger.Cards.models.Cards;
 import com.engmes.EnglishMessenger.Chats.model.ChatRoom;
-import com.engmes.EnglishMessenger.Interests.model.Interest;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -45,19 +45,9 @@ public class User {
     private String languageLevel;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "card_id")
-    @Column(name = "card_list", nullable = true)
-    private List<Card> cardList;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "repeat_card_id")
-    @Column(name = "to_repeat_cards", nullable = true)
-    private List<Card> toRepeatCards;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "learned_card_id")
-    @Column(name = "learned_cards", nullable = true)
-    private List<Card> learnedCard;
+    @JoinColumn(name = "cards_id")
+    @Column(name = "card_sets", nullable = true)
+    private List<CardSet> cardSets;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
