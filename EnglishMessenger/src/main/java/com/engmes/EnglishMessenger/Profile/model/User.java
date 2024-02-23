@@ -45,12 +45,17 @@ public class User {
     private String languageLevel;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "card_repeat_id")
+    @JoinColumn(name = "card_id")
+    @Column(name = "card_list", nullable = true)
+    private List<Card> cardList;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "repeat_card_id")
     @Column(name = "to_repeat_cards", nullable = true)
     private List<Card> toRepeatCards;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "card_learned_id")
+    @JoinColumn(name = "learned_card_id")
     @Column(name = "learned_cards", nullable = true)
     private List<Card> learnedCard;
 

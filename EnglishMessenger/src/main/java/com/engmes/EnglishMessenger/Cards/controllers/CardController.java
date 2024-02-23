@@ -14,8 +14,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class CardController {
     private final CardService service;
 
-    @PostMapping("/saveCard")
-    public void saveCard(@RequestBody Card card) {
-        service.saveCard(card);
+    @PostMapping("/createCard")
+    public String saveCard(@RequestBody Card card) {
+        return service.saveCard(card);
+    }
+
+    @PostMapping("/save_to_repeat")
+    public String saveToRepeat(@RequestBody Card card) {
+        return service.saveToRepeatCard(card);
+    }
+
+    @PostMapping("/save_to_learned")
+    public String saveToLearned(@RequestBody Card card) {
+        return service.saveToLearnedCard(card);
     }
 }
