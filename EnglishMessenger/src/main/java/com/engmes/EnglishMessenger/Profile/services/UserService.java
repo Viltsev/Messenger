@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -65,4 +66,27 @@ public class UserService implements UserDetailsService {
     }
 
     public void updateUser(User user) { userRepository.save(user); }
+
+    public int getLanguageLevel(User user) {
+        if (user.getLanguageLevel() == null) {
+            return 0;
+        }
+        else {
+            String strLanguageLevel = user.getLanguageLevel();
+
+            return switch (strLanguageLevel) {
+                case "A1" -> 1;
+                case "A2" -> 2;
+                case "B1" -> 3;
+                case "B2" -> 4;
+                case "C1" -> 5;
+                case "C2" -> 6;
+                default -> 0;
+            };
+        }
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 }

@@ -23,7 +23,7 @@ public class UserController {
     public ResponseEntity<String> getUsername(@RequestBody String email) {
         Optional<User> user = userService.findByEmail(email);
 
-        if (user != null) {
+        if (user.isPresent()) {
             return ResponseEntity.ok(user.get().getUsername());
         } else {
             // Если пользователь не найден, возвращаем ошибку 404
