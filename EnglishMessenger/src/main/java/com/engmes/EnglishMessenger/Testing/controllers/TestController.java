@@ -6,6 +6,7 @@ import com.engmes.EnglishMessenger.Testing.model.Answer;
 import com.engmes.EnglishMessenger.Testing.model.Question;
 import com.engmes.EnglishMessenger.Testing.services.TestService;
 import lombok.AllArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
@@ -49,7 +50,7 @@ public class TestController {
             User currentUser = user.get();
             currentUser.setLanguageLevel(level);
             userService.updateUser(currentUser);
-            return "Current level for user " + currentUser.getUsername() + "is " + level;
+            return level;
         } else {
             return "User not found. There are not possibility to update language level";
         }
