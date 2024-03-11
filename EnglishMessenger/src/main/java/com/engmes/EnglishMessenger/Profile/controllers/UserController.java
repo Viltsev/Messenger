@@ -8,8 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -29,5 +32,14 @@ public class UserController {
             // Если пользователь не найден, возвращаем ошибку 404
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
+    }
+
+    @PostMapping("/setFields")
+    public void setUserFields( @RequestBody String email,
+                               @RequestBody String username,
+                               @RequestBody Date dateOfBirth,
+                               @RequestBody byte[] photo,
+                               @RequestBody List<Long> interests) {
+        userService.setFields(email, username, dateOfBirth, photo, interests);
     }
 }

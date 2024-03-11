@@ -30,8 +30,12 @@ public class InterestController {
 
     @GetMapping("/getAll")
     public List<Interest> getInterests() {
-        logger.info("GET-метод работает.");
         return interestService.getAllInterests();
+    }
+
+    @PostMapping("/saveAll")
+    public void saveInterest(@RequestBody List<Interest> interestList) {
+        interestList.forEach(interestService::saveInterest);
     }
 
     @PostMapping("/save/{email}")

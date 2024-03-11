@@ -19,8 +19,14 @@ import java.util.List;
 public class InterestServiceImplementation implements InterestService {
     private static final Logger logger = LoggerFactory.getLogger(RegisterController.class);
     private final InterestRepository interestRepository;
+
     @Override
     public List<Interest> getAllInterests() {
         return interestRepository.findAll();
+    }
+
+    @Override
+    public void saveInterest(Interest interest) {
+        interestRepository.save(interest);
     }
 }
