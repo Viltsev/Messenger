@@ -2,6 +2,7 @@ package com.engmes.EnglishMessenger.Profile.services;
 
 import com.engmes.EnglishMessenger.Cards.models.Card;
 import com.engmes.EnglishMessenger.Cards.enums.CardLists;
+import com.engmes.EnglishMessenger.Profile.model.OnboardingInfo;
 import com.engmes.EnglishMessenger.Profile.model.User;
 import com.engmes.EnglishMessenger.Profile.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -35,7 +36,7 @@ public class UserService implements UserDetailsService {
         ));
 
         return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
+                user.getEmail(),
                 user.getPassword(),
                 Collections.singleton(new SimpleGrantedAuthority("EmptyRole"))
         );
@@ -88,5 +89,18 @@ public class UserService implements UserDetailsService {
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public void setOnboardingInfo(OnboardingInfo onboardingInfo) {
+        String email = onboardingInfo.getEmail();
+        User user = findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(
+                String.format("User '%s' has been not found", email)
+        ));
+
+        user.setUsername(onboardingInfo.getUsername());
+        user.setDateOfBirth(onboardingInfo.getDateOfBirth());
+
+        updateUser(user);
+        logger.info("Onboarding data successfully added!");
     }
 }
