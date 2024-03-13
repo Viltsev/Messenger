@@ -14,11 +14,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -68,6 +66,10 @@ public class UserService implements UserDetailsService {
 
     public void updateUser(User user) { userRepository.save(user); }
 
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
     public int getLanguageLevel(User user) {
         if (user.getLanguageLevel() == null) {
             return 0;
@@ -87,8 +89,14 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public void setFields(String email, String username,Date dateOfBirth, byte[] photo, List<Long> interests) {
+        Optional<User> optionalUser = findByEmail(email);
+        User user = optionalUser.get();
+        user.setUsername(username);
+        user.setDateOfBirth(dateOfBirth);
+        user.setPhoto(photo);
+        user.setIdInterests(interests);
+        updateUser(user);
     }
 
     public void setOnboardingInfo(OnboardingInfo onboardingInfo) {
