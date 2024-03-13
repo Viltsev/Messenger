@@ -1,10 +1,11 @@
 package com.engmes.EnglishMessenger.Profile.services;
 
-import com.engmes.EnglishMessenger.Cards.models.Card;
-import com.engmes.EnglishMessenger.Cards.enums.CardLists;
+import com.engmes.EnglishMessenger.Profile.config.AmazonConfig;
+import com.engmes.EnglishMessenger.Profile.utils.Base64DecodedMultipartFile;
 import com.engmes.EnglishMessenger.Profile.model.OnboardingInfo;
 import com.engmes.EnglishMessenger.Profile.model.User;
 import com.engmes.EnglishMessenger.Profile.repository.UserRepository;
+import com.engmes.EnglishMessenger.Profile.utils.UniqueIdGenerator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -14,17 +15,25 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.auth.AWSCredentials;
+import org.springframework.web.multipart.MultipartFile;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.io.IOException;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
+    private final AmazonConfig amazonConfig;
+    private final UniqueIdGenerator idGenerator;
+
     public Optional<User> findByEmail(String email){
         return Optional.ofNullable(userRepository.findByEmail(email));
     }
@@ -91,16 +100,68 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
+    public void uploadPhoto(MultipartFile multipartFile, String bucketName, String fileName) throws IOException {
+        AWSCredentials credentials = new BasicAWSCredentials(
+                "UHV1BYZW3MODFPHOR31Z",
+                "Pew5ZaEi5PpXHcmQ9UNOBQkwDJR3IAaGjbhkl2QP"
+        );
+
+        AmazonS3 s3 = AmazonS3ClientBuilder.standard()
+                .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                .withEndpointConfiguration(
+                        new AmazonS3ClientBuilder.EndpointConfiguration(
+                                "https://s3.timeweb.cloud","ru-1"
+                        )
+                )
+                .build();
+
+        PutObjectRequest request = new PutObjectRequest(bucketName, fileName, multipartFile.getInputStream(), null);
+
+        s3.putObject(request);
+    }
+
     public void setOnboardingInfo(OnboardingInfo onboardingInfo) {
         String email = onboardingInfo.getEmail();
         User user = findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(
                 String.format("User '%s' has been not found", email)
         ));
 
+        Optional<String> photoId = setPhoto(onboardingInfo.getPhoto());
+
         user.setUsername(onboardingInfo.getUsername());
         user.setDateOfBirth(onboardingInfo.getDateOfBirth());
 
+        photoId.ifPresent(user::setPhoto);
+
         updateUser(user);
         logger.info("Onboarding data successfully added!");
+    }
+
+    public Optional<String> setPhoto(String photo) {
+        // get base64 code of image from client
+        byte[] photoByte = Base64.getDecoder().decode(photo);
+        // decode to MultipartFile
+        MultipartFile photoFile = new Base64DecodedMultipartFile(photoByte);
+        // generate photo id
+        String photoId = idGenerator.generateUniqueId();
+        String fileName = String.format("%s.jpg", photoId);
+
+        try {
+            uploadPhotoAws(
+                    photoFile,
+                    "c69f4719-fa278707-76a9-4ddc-bc9e-bc582ad152d2",
+                    fileName
+            );
+
+        } catch (IOException e) {
+            logger.info(e.getMessage());
+            return Optional.empty();
+        }
+        return fileName.describeConstable();
+    }
+
+    public void uploadPhotoAws(MultipartFile multipartFile, String bucketName, String fileName) throws IOException {
+        PutObjectRequest request = new PutObjectRequest(bucketName, fileName, multipartFile.getInputStream(), null);
+        amazonConfig.getAwsClient().putObject(request);
     }
 }

@@ -7,11 +7,10 @@ import com.engmes.EnglishMessenger.Profile.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @RestController
@@ -21,6 +20,18 @@ public class UserController {
     private UserRepository userRepository;
     @Autowired
     private UserService userService;
+
+    @PostMapping("/test_photo")
+    public String uploadPhoto(@RequestParam("file") MultipartFile file) {
+        try {
+            userService.uploadPhoto(file, "c69f4719-fa278707-76a9-4ddc-bc9e-bc582ad152d2", file.getOriginalFilename());
+            return "Image uploaded successfully!";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Error uploading image: " + e.getMessage();
+        }
+    }
+
 
     @PostMapping("/set_onboarding")
     public String setUserInfo(@RequestBody OnboardingInfo onboardingInfo) {
