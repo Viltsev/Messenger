@@ -22,8 +22,8 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.auth.AWSCredentials;
 import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-
 import java.io.IOException;
+import org.springframework.web.bind.annotation.RequestBody;
 import java.util.*;
 
 @Service
