@@ -42,7 +42,7 @@ public class User {
     private Date dateOfBirth;
 
     @Column(name = "photo", nullable = true)
-    private byte[] photo;
+    private String photo;
 
     @ElementCollection
     private List<Long> idInterests;
