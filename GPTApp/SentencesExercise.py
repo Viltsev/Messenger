@@ -1,37 +1,30 @@
 import g4f
 import json
 
-def ask_gpt(messages: list) -> str:
+def ask_gpt(messages: list):
     response = g4f.ChatCompletion.create(
-        model=g4f.models.gpt_4,
+        model=g4f.models.gpt_35_turbo,
         messages=messages,
-        provider=g4f.Provider.You,
+        provider=g4f.Provider.FreeGpt,
         stream=True
     )
-    return response
+    result = []
+    for i in response:
+        result.append(i)
+    return result
 
-
-def main(answers: list):
-    question = """
-        Generate 15 exercises topic: All conditionals – mixed conditionals, alternatives to if, inversion
+def main(topic):
+    question = f"""
+        Generate 15 exercises topic: {topic}
         It should be sentences with missed words.
         Give me it ONLY in json format, like:
-        {
             "exercise": string,
-            "right_answer": string
-        }
+            "right_answer": string    
     """
 
-    messages = [
-        {"role": "assistant", "content": answer} for answer in answers
-    ]
-    messages.append({"role": "user", "content": question})
+    messages = [{"role": "user", "content": question}]
+    answers = ask_gpt(messages=messages)
 
-    answer = ask_gpt(messages=messages)
-
-    answer_list = list(answer)
-    json_data = ''.join(answer_list).split("```json")[1].split("```")[0].strip()
-
-    exercise_data = json.loads(json_data)
-    answers.append(json.dumps(exercise_data, indent=4))
-    return exercise_data, answers
+    json_string = ''.join(answers)
+    exercise_data = json.loads(json_string)
+    return exercise_data
