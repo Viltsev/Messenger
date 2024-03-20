@@ -1,8 +1,6 @@
 package com.engmes.EnglishMessenger.Exercises.services;
 
-import com.engmes.EnglishMessenger.Exercises.models.QuestionExercise;
-import com.engmes.EnglishMessenger.Exercises.models.SendAnswerModel;
-import com.engmes.EnglishMessenger.Exercises.models.SentenceExercise;
+import com.engmes.EnglishMessenger.Exercises.models.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,6 +86,51 @@ public class ExercisesServiceImplementation implements ExercisesService {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             return ResponseEntity.ok(objectMapper.readValue(response.body(), QuestionExercise.class));
+        } catch (Exception e) {
+            logger.info(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @Override
+    public String getTranslationExercise(GetTranslationModel translationModel) throws IOException, InterruptedException {
+        String apiURL = "http://127.0.0.1:8000/get_translation_exercise?topic="
+                + URLEncoder.encode(translationModel.getTopic(), StandardCharsets.UTF_8)
+                + "&level=" + URLEncoder.encode(translationModel.getLevel(), StandardCharsets.UTF_8);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(apiURL))
+                .GET()
+                .build();
+
+        HttpResponse<String> response =
+                HttpClient
+                        .newHttpClient()
+                        .send(request, HttpResponse.BodyHandlers.ofString());
+
+        return response.body();
+    }
+
+    @Override
+    public ResponseEntity sendTranslationExercise(SendTranslationModel translationModel)
+            throws IOException, InterruptedException {
+        String apiURL = "http://127.0.0.1:8000/send_translation_exercise?original_text="
+                + URLEncoder.encode(translationModel.getOriginal_text(), StandardCharsets.UTF_8)
+                + "&text=" + URLEncoder.encode(translationModel.getText(), StandardCharsets.UTF_8)
+                + "&level=" + URLEncoder.encode(translationModel.getLevel(), StandardCharsets.UTF_8);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(apiURL))
+                .GET()
+                .build();
+
+        HttpResponse<String> response =
+                HttpClient
+                        .newHttpClient()
+                        .send(request, HttpResponse.BodyHandlers.ofString());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return ResponseEntity.ok(objectMapper.readValue(response.body(), TranslationModel.class));
         } catch (Exception e) {
             logger.info(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
