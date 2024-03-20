@@ -1,7 +1,8 @@
 package com.engmes.EnglishMessenger.Exercises.services;
 
-import com.engmes.EnglishMessenger.Exercises.models.Exercise;
-import com.engmes.EnglishMessenger.Profile.services.UserService;
+import com.engmes.EnglishMessenger.Exercises.models.QuestionExercise;
+import com.engmes.EnglishMessenger.Exercises.models.SendAnswerModel;
+import com.engmes.EnglishMessenger.Exercises.models.SentenceExercise;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ public class ExercisesServiceImplementation implements ExercisesService {
 
     @Override
     public ResponseEntity getSentenceExercises(String topic) throws IOException, InterruptedException {
-        String apiURL = "http://127.0.0.1:8000/get_data?topic=" + URLEncoder.encode(topic, StandardCharsets.UTF_8);
+        String apiURL = "http://127.0.0.1:8000/get_sentence_exercise?topic=" + URLEncoder.encode(topic, StandardCharsets.UTF_8);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(apiURL))
                 .GET()
@@ -38,14 +39,55 @@ public class ExercisesServiceImplementation implements ExercisesService {
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            Exercise[] exercisesArray = objectMapper.readValue(response.body(), Exercise[].class);
-            List<Exercise> exercises = new ArrayList<>();
-            for (Exercise exercise : exercisesArray) {
-                if (exercise.getExercise().contains("_______")) {
-                    exercises.add(exercise);
+            SentenceExercise[] exercisesArray = objectMapper.readValue(response.body(), SentenceExercise[].class);
+            List<SentenceExercise> sentenceExercises = new ArrayList<>();
+            for (SentenceExercise sentenceExercise : exercisesArray) {
+                if (sentenceExercise.getExercise().contains("_______")) {
+                    sentenceExercises.add(sentenceExercise);
                 }
             }
-            return ResponseEntity.ok(exercises);
+            return ResponseEntity.ok(sentenceExercises);
+        } catch (Exception e) {
+            logger.info(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @Override
+    public String getQuestionExercises(String level) throws IOException, InterruptedException {
+        String apiURL = "http://127.0.0.1:8000/get_question?level=" + URLEncoder.encode(level, StandardCharsets.UTF_8);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(apiURL))
+                .GET()
+                .build();
+
+        HttpResponse<String> response =
+                HttpClient
+                        .newHttpClient()
+                        .send(request, HttpResponse.BodyHandlers.ofString());
+
+        return response.body();
+    }
+
+    @Override
+    public ResponseEntity sendAnswersExercises(SendAnswerModel answerModel) throws IOException, InterruptedException {
+        String apiURL = "http://127.0.0.1:8000/send_answer?question="
+                + URLEncoder.encode(answerModel.getQuestion(), StandardCharsets.UTF_8)
+                + "&answer=" + URLEncoder.encode(answerModel.getAnswer(), StandardCharsets.UTF_8);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(apiURL))
+                .GET()
+                .build();
+
+        HttpResponse<String> response =
+                HttpClient
+                        .newHttpClient()
+                        .send(request, HttpResponse.BodyHandlers.ofString());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return ResponseEntity.ok(objectMapper.readValue(response.body(), QuestionExercise.class));
         } catch (Exception e) {
             logger.info(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
