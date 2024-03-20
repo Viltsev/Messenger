@@ -55,13 +55,4 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
     }
-
-    @PostMapping("/setFields")
-    public void setUserFields( @RequestBody String email,
-                               @RequestBody String username,
-                               @RequestBody Date dateOfBirth,
-                               @RequestBody byte[] photo,
-                               @RequestBody List<Long> interests) {
-        userService.setFields(email, username, dateOfBirth, photo, interests);
-    }
 }

@@ -100,16 +100,6 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public void setFields(String email, String username,Date dateOfBirth, byte[] photo, List<Long> interests) {
-        Optional<User> optionalUser = findByEmail(email);
-        User user = optionalUser.get();
-        user.setUsername(username);
-        user.setDateOfBirth(dateOfBirth);
-        user.setPhoto(photo);
-        user.setIdInterests(interests);
-        updateUser(user);
-    }
-
     public void uploadPhoto(MultipartFile multipartFile, String bucketName, String fileName) throws IOException {
         AWSCredentials credentials = new BasicAWSCredentials(
                 "UHV1BYZW3MODFPHOR31Z",
