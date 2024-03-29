@@ -8,15 +8,25 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/theory")
 @RequiredArgsConstructor
 public class TheoryController {
     private final TheoryService service;
-    @PostMapping("/save_topic")
+    @PostMapping("/scrape_theory")
     public GrammarTheory getSentencesExercises() throws IOException {
-        //service.scrapeTheoryNew();
         return service.scrapeTheory();
+    }
+
+    @GetMapping("/get_by_level/{level}")
+    public GrammarTheory getTheoryByLevel(@PathVariable String level) {
+        return service.scrapeSortedTheory(level);
+    }
+
+    @GetMapping("/get_theory")
+    public GrammarTheory getTheory() {
+        return service.getTheory();
     }
 }

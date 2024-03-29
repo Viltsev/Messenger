@@ -247,7 +247,7 @@ public class Scraper {
                     levelDescription = "Unknown";
                     break;
             }
-            
+
             return levelDescription;
         } else {
             return "Unknown";
