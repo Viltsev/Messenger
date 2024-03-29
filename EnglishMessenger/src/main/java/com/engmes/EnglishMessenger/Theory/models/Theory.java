@@ -2,6 +2,8 @@ package com.engmes.EnglishMessenger.Theory.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "theory")
@@ -9,16 +11,14 @@ public class Theory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String explanation;
-    private String example;
-    private String rusExplanation;
+    private String title;
     private String level;
+    @Column(columnDefinition = "TEXT")
+    private String explanation;
+    @Column(columnDefinition = "TEXT")
+    private String example;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "common_mistakes_id")
-    private CommonMistakes rusCommonMistakes;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "common_mistakes_id")
-    private CommonMistakes commonMistakes;
+    private String commonMistakeDescription;
+    private String cmWrong;
+    private String cmRight;
 }

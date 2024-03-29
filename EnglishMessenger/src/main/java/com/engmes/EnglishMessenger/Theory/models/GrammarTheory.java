@@ -1,21 +1,19 @@
 package com.engmes.EnglishMessenger.Theory.models;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
 import java.util.List;
 
 @Data
 @Entity
-@Table(name = "subtopic")
-public class Subtopic {
+@Table(name = "grammar_theory")
+public class GrammarTheory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
-    private String description;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "theory_id")
-    private List<Theory> theoryList;
+    @JoinColumn(name = "theory_category_id")
+    private List<Category> categories;
 }
