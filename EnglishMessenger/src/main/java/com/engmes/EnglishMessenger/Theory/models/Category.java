@@ -18,4 +18,8 @@ public class Category {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "topic_id")
     private List<Topic> topics;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "theory_id2")
+    private List<Theory> theoryList;
 }

@@ -48,11 +48,20 @@ public class Scraper {
             category.setTitle(categoryTitle);
             category.setDescription(categoryDescription);
 
-            // scrape topic list
+            // scrape topic (or theory if topic is null) list
             try {
                 List<Topic> topicList = scrapeTopics(categoryHref);
+
+                if (!topicList.isEmpty()) {
+                    category.setTopics(topicList);
+                } else {
+                    // scrape theory
+                    List<Theory> theoryList = scrapeTheory(categoryHref);
+                    // setting theory list to category
+                    category.setTheoryList(theoryList);
+                }
                 // set topic list to category
-                category.setTopics(topicList);
+                // category.setTopics(topicList);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
