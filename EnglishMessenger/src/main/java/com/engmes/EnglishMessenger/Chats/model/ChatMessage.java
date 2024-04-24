@@ -18,6 +18,8 @@ public class ChatMessage {
     @Id
     @GeneratedValue
     private Long id;
+    private String idChat;
+    private String type; // type of message
     private String content; // text of message
     private String sender; // full name of sender
     private String recipient; // full name of recipient
