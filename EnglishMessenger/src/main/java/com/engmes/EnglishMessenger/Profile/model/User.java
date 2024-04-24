@@ -1,5 +1,6 @@
 package com.engmes.EnglishMessenger.Profile.model;
 
+import com.engmes.EnglishMessenger.Cards.models.Card;
 import com.engmes.EnglishMessenger.Cards.models.CardSet;
 //import com.engmes.EnglishMessenger.Cards.models.Cards;
 import com.engmes.EnglishMessenger.Chats.model.ChatRoom;
@@ -54,6 +55,16 @@ public class User {
     @JoinColumn(name = "cards_id")
     @Column(name = "card_sets", nullable = true)
     private List<CardSet> cardSets;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cards_id_tl")
+    @Column(name = "card_to_learn", nullable = true)
+    private List<Card> cardsToLearn;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cards_id_tld")
+    @Column(name = "card_learned", nullable = true)
+    private List<Card> cardsLearned;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")

@@ -13,7 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -36,7 +38,7 @@ public class CardServiceImplementation implements CardService {
     }
 
     @Override
-    public void createCardSet(CardSet cardSet) {
+    public String createCardSet(CardSet cardSet) {
         String email = cardSet.getUserEmail();
         User userFromDB = userRepository.findByEmail(email);
 
@@ -47,8 +49,10 @@ public class CardServiceImplementation implements CardService {
             userFromDB.setCardSets(currentCards);
             userRepository.save(userFromDB);
             logger.info("New card set successfully saved");
+            return "New card set successfully saved";
         } else {
             logger.info("There is not such user in database");
+            return "There is not such user in database";
         }
     }
 
@@ -77,7 +81,31 @@ public class CardServiceImplementation implements CardService {
     }
 
     @Override
-    public void createCard(Card card) {
+    public void updateTotalCards(String userEmail) {
+        User user = userRepository.findByEmail(userEmail);
+        if (user != null) {
+            List<CardSet> cardSets = user.getCardSets();
+            List<Card> cardsToLearn = new ArrayList<>();
+            List<Card> cardsLearned = new ArrayList<>();
+
+            cardSets.forEach(cardSet -> {
+                List<Card> toLearn = cardSet.getToLearn();
+                List<Card> learned = cardSet.getLearned();
+                cardsToLearn.addAll(toLearn);
+                cardsLearned.addAll(learned);
+            });
+
+            user.setCardsToLearn(cardsToLearn);
+            user.setCardsLearned(cardsLearned);
+
+            userRepository.save(user);
+        } else {
+            logger.info("There is not such user in database!");
+        }
+    }
+
+    @Override
+    public String createCard(Card card) {
         // find card set which will save this card
         CardSet cardSet = findCardSet(card.getSetId(), card.getUserEmail());
 
@@ -97,16 +125,18 @@ public class CardServiceImplementation implements CardService {
 
             // update set in database
             updateCardSet(cardSet);
+            updateTotalCards(card.getUserEmail());
 
             logger.info("New card successfully saved!");
+            return "New card successfully saved!";
         } else {
             logger.info("There is not such card set in database");
+            return "There is not such card set in database";
         }
-
     }
 
     @Override
-    public void saveToLearnedCards(Card card) {
+    public String saveToLearnedCards(Card card) {
         CardSet currentCardsSet = findCardSet(card.getSetId(), card.getUserEmail());
         if (currentCardsSet != null) {
             // get list of cards to learn
@@ -125,15 +155,18 @@ public class CardServiceImplementation implements CardService {
 
             // update set in database
             updateCardSet(currentCardsSet);
+            updateTotalCards(card.getUserEmail());
 
             logger.info("New card set successfully saved");
+            return "New card set successfully saved";
         } else {
             logger.info("There is not such card set in database");
+            return "There is not such card set in database";
         }
     }
 
     @Override
-    public void refreshCards(Long id, String email) {
+    public String refreshCards(Long id, String email) {
         CardSet cardSet = findCardSet(id, email);
         if (cardSet != null) {
             List<Card> currentCardsToLearn = cardSet.getToLearn();
@@ -150,8 +183,65 @@ public class CardServiceImplementation implements CardService {
 
             // update card set in database
             updateCardSet(cardSet);
+            updateTotalCards(email);
+            return "Cards have been refreshed!";
         } else {
             logger.info("There is not such card set in database");
+            return "There is not such card set in database";
+        }
+    }
+
+    @Override
+    public String deleteAllTotal(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user != null) {
+            user.setCardsToLearn(null);
+            user.setCardsLearned(null);
+            userRepository.save(user);
+            return "All total cards have been deleted!";
+        } else {
+            logger.info("There is not such user in database!");
+            return "There is not such user in database!";
+        }
+    }
+
+    @Override
+    public String deleteCard(Card card) {
+        User user = userRepository.findByEmail(card.getUserEmail());
+
+        if (user != null) {
+            List<CardSet> cardSets = user.getCardSets();
+            cardSets.forEach(cardSet -> {
+                cardSet.getCardList().remove(card);
+                cardSet.getToLearn().remove(card);
+                cardSet.getLearned().remove(card);
+            });
+            user.setCardSets(cardSets);
+            userRepository.save(user);
+
+            updateTotalCards(card.getUserEmail());
+            return "Card has been deleted!";
+        } else {
+            logger.info("There is not such user in database!");
+            return "There is not such user in database!";
+        }
+    }
+
+    @Override
+    public String deleteSet(String email, Long id) {
+        User user = userRepository.findByEmail(email);
+
+        if (user != null) {
+            List<CardSet> cardSets = user.getCardSets();
+            cardSets.removeIf(cardSet -> Objects.equals(cardSet.getId(), id));
+            user.setCardSets(cardSets);
+            userRepository.save(user);
+
+            updateTotalCards(email);
+            return "Set has been deleted!";
+        } else {
+            logger.info("There is not such user in database!");
+            return "There is not such user in database!";
         }
     }
 }
