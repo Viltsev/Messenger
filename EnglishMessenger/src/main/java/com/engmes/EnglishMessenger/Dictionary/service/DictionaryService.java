@@ -9,4 +9,6 @@ public interface DictionaryService {
     Word getFindWord(String searchWord);
 
     void saveWord(Word word);
+
+    void scrapeDictionary();
 }
