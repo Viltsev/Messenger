@@ -244,4 +244,61 @@ public class CardServiceImplementation implements CardService {
             return "There is not such user in database!";
         }
     }
+
+    @Override
+    public List<Card> getTotalToLearn(String email) {
+        User user = userRepository.findByEmail(email);
+
+        if (user != null) {
+            return user.getCardsToLearn();
+        } else {
+            logger.info("There is not such user in database!");
+            return null;
+        }
+    }
+
+    @Override
+    public List<Card> getTotalLearned(String email) {
+        User user = userRepository.findByEmail(email);
+
+        if (user != null) {
+            return user.getCardsLearned();
+        } else {
+            logger.info("There is not such user in database!");
+            return null;
+        }
+    }
+
+    @Override
+    public List<CardSet> getCardSets(String email) {
+        User user = userRepository.findByEmail(email);
+
+        if (user != null) {
+            return user.getCardSets();
+        } else {
+            logger.info("There is not such user in database!");
+            return null;
+        }
+    }
+
+    @Override
+    public CardSet getCardSet(String email, Long id) {
+        User user = userRepository.findByEmail(email);
+
+        if (user != null) {
+            List<CardSet> cardSets = user.getCardSets();
+
+            for (CardSet cardSet : cardSets) {
+                if (cardSet.getId().equals(id)) {
+                    return cardSet;
+                }
+            }
+
+            logger.info("CardSet with id " + id + " not found for user " + email);
+            return null;
+        } else {
+            logger.info("There is not such user in database!");
+            return null;
+        }
+    }
 }

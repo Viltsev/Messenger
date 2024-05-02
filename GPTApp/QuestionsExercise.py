@@ -1,17 +1,21 @@
-import g4f
 import json
+import os
+from dotenv import load_dotenv
+
+from openai import OpenAI
+load_dotenv()
+
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY"),
+    base_url="https://api.proxyapi.ru/openai/v1"
+)
 
 def ask_gpt(messages: list):
-    response = g4f.ChatCompletion.create(
-        model=g4f.models.gpt_35_turbo,
-        messages=messages,
-        provider=g4f.Provider.FreeGpt,
-        stream=True
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=messages
     )
-    result = ""
-    for i in response:
-        result = result + i
-    return result
+    return response.choices[0].message.content
 
 def get_question(level: str):
     question = f"""
