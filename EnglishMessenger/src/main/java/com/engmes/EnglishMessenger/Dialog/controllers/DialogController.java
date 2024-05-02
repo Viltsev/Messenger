@@ -18,8 +18,8 @@ public class DialogController {
     @Autowired
     private final DialogService dialogService;
 
-    @PostMapping("/generateDialog")
-    public User generateDialog(@RequestBody String email) {
+    @PostMapping("/generateDialog/{email}")
+    public User generateDialog(@PathVariable String email) {
         return dialogService.generateDialog(email);
     }
 }

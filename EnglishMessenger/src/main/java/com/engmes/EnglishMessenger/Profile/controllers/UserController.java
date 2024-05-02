@@ -38,6 +38,16 @@ public class UserController {
     }
 
 
+    @GetMapping("/get_all_users")
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
+    }
+
+    @GetMapping("/get_user_by_username/{username}")
+    public User getUserByUsername(@PathVariable String username) {
+        return userService.findUserByUsername(username);
+    }
+
     @PostMapping("/set_onboarding")
     public String setUserInfo(@RequestBody OnboardingInfo onboardingInfo) {
         userService.setOnboardingInfo(onboardingInfo);

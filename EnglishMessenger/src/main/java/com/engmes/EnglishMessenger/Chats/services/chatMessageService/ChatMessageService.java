@@ -9,4 +9,6 @@ import java.util.stream.Stream;
 public interface ChatMessageService {
     ChatMessage saveChat(ChatMessage chatMessage);
     Stream<ChatMessage> findAllMessages(String chatId);
+    String saveMessage(ChatMessage chatMessage);
+    void updateChatRoomMessage(ChatRoom chatRoom, ChatMessage chatMessage);
 }

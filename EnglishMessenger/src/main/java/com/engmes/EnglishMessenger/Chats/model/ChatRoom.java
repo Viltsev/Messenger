@@ -18,6 +18,8 @@ public class ChatRoom {
     private String recipientId;
     private String chatId;
 
+    private String lastMessage;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "chat_id")
     private List<ChatMessage> chatMessageList;

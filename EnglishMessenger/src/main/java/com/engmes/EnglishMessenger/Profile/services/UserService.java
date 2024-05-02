@@ -75,6 +75,23 @@ public class UserService implements UserDetailsService {
         return null;
     }
 
+    public User findUserByUsername(String username) throws UsernameNotFoundException {
+        List<User> userList = getAllUsers();
+
+        Optional<User> foundUser = userList.stream()
+                                           .filter(user -> {
+                                               String userUsername = user.getUsername();
+                                               return userUsername != null && userUsername.equals(username);
+                                           })
+                                           .findFirst();
+
+        if (foundUser.isPresent()) {
+            return foundUser.get();
+        } else {
+            throw new UsernameNotFoundException("User with username " + username + " not found");
+        }
+    }
+
     public void updateUser(User user) { userRepository.save(user); }
 
     public List<User> getAllUsers() {
