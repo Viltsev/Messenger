@@ -29,9 +29,14 @@ public class DictionaryController {
         dictionaryService.scrapeDictionary();
     }
 
-    @GetMapping("/findWord")
-    public ResponseEntity findWord(@RequestParam String searchWord) {
-        return dictionaryService.getFindWord(searchWord);
+    @GetMapping("/findEngWord")
+    public ResponseEntity findEngWord(@RequestParam String searchWord) {
+        return dictionaryService.getFindEngWord(searchWord);
+    }
+
+    @GetMapping("/findRusWord")
+    public ResponseEntity findRusWord(@RequestParam String searchWord) {
+        return dictionaryService.getFindRusWord(searchWord);
     }
 
     @PostMapping("/saveWords")

@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DictionaryRepository extends JpaRepository<Word, Long> {
-    @Query("SELECT w FROM Word w WHERE w.word LIKE %?1%")
-    List<Word> findWord(String searchWord);
+    @Query("SELECT w FROM Word w WHERE w.word = ?1")
+    List<Word> findEngWord(String searchWord);
+
+    @Query("SELECT w FROM Word w WHERE w.description LIKE %?1%")
+    List<Word> findRusWord(String searchWord);
 }

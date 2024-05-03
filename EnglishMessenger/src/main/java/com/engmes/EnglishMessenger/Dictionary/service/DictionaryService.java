@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface DictionaryService {
-    ResponseEntity getFindWord(String searchWord);
+    ResponseEntity getFindEngWord(String searchWord);
+
+    ResponseEntity getFindRusWord(String searchWord);
 
     void saveWord(Word word);
 

@@ -15,8 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -26,11 +28,29 @@ public class DictionaryServiceImplementation implements DictionaryService {
 
     private final DictionaryRepository dictionaryRepository;
 
-    public ResponseEntity getFindWord(String searchWord) {
-        List<Word> wordList = dictionaryRepository.findWord(searchWord);
+    public ResponseEntity getFindEngWord(String searchWord) {
+        List<Word> wordList = dictionaryRepository.findEngWord(searchWord);
         Optional<Word> word = wordList.stream().findFirst();
         if (word.isPresent()) {
             return ResponseEntity.ok(word);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    public ResponseEntity getFindRusWord(String searchWord) {
+        List<Word> wordList = dictionaryRepository.findRusWord(searchWord);
+        List<Word> sortedWords = wordList.stream()
+                .sorted(Comparator.comparingInt(word -> word.getWord().length()))
+                .toList();
+        int numberOfBestMatches = 5;
+
+        List<Word> bestMatches = sortedWords.stream()
+                .limit(numberOfBestMatches)
+                .collect(Collectors.toList());
+
+        if (!bestMatches.isEmpty()) {
+            return ResponseEntity.ok(bestMatches);
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
