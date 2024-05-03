@@ -11,9 +11,12 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -23,8 +26,14 @@ public class DictionaryServiceImplementation implements DictionaryService {
 
     private final DictionaryRepository dictionaryRepository;
 
-    public Word getFindWord(String searchWord) {
-        return dictionaryRepository.findWord(searchWord);
+    public ResponseEntity getFindWord(String searchWord) {
+        List<Word> wordList = dictionaryRepository.findWord(searchWord);
+        Optional<Word> word = wordList.stream().findFirst();
+        if (word.isPresent()) {
+            return ResponseEntity.ok(word);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @Override
