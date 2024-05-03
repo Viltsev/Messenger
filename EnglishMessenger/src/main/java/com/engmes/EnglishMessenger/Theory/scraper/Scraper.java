@@ -240,22 +240,12 @@ public class Scraper {
         if (matcher.find()) {
             String level = matcher.group().substring(0, 1);
 
-            String levelDescription;
-
-            switch (level) {
-                case "A":
-                    levelDescription = "Beginners";
-                    break;
-                case "B":
-                    levelDescription = "Intermediate";
-                    break;
-                case "C":
-                    levelDescription = "Advanced";
-                    break;
-                default:
-                    levelDescription = "Unknown";
-                    break;
-            }
+            String levelDescription = switch (level) {
+                case "A" -> "Beginners";
+                case "B" -> "Intermediate";
+                case "C" -> "Advanced";
+                default -> "Unknown";
+            };
 
             return levelDescription;
         } else {
