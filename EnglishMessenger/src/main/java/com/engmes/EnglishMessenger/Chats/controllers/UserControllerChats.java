@@ -52,4 +52,9 @@ public class UserControllerChats {
     public String deleteChat(@PathVariable String chatId) {
         return chatRoomService.deleteChat(chatId);
     }
+
+    @GetMapping("/get_last_message/{chatId}")
+    public String getLastMessage(@PathVariable String chatId) {
+        return chatRoomService.getLastMessage(chatId);
+    }
 }

@@ -65,8 +65,4 @@ public class User {
     @JoinColumn(name = "cards_id_tld")
     @Column(name = "card_learned", nullable = true)
     private List<Card> cardsLearned;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private List<ChatRoom> chatRoomList;
 }

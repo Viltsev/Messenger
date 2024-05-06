@@ -13,7 +13,7 @@ public interface ChatRoomService {
     ChatRoom updateChatRoom(ChatRoom chatRoom);
     String createChatRoom(ChatRoom chatRoom);
     String generateChatId(String senderId, String recipientId);
-    void updateUserChatRoom(User userChats, ChatRoom chatRoom);
     List<User> getChatUsers(String email);
     String deleteChat(String chatId);
+    String getLastMessage(String chatId);
 }

@@ -1,6 +1,5 @@
 package com.engmes.EnglishMessenger.Chats.services.chatRoomService;
 
-import com.engmes.EnglishMessenger.Chats.model.ChatMessage;
 import com.engmes.EnglishMessenger.Chats.model.ChatRoom;
 import com.engmes.EnglishMessenger.Chats.repo.ChatRoomRepository;
 import com.engmes.EnglishMessenger.Profile.model.User;
@@ -68,15 +67,10 @@ public class ChatRoomImplementation implements ChatRoomService {
             User sender = senderOptional.get();
             User recipient = recipientOptional.get();
 
-            ChatRoom senderChatRoom = chatRoom;
-            ChatRoom recipientChatRoom = chatRoom;
-
             String chatId = generateChatId(sender.getEmail(), recipient.getEmail());
 
             ChatRoom checkChat = findChatById(chatId);
             if (checkChat == null) {
-                updateUserChatRoom(sender, senderChatRoom);
-                updateUserChatRoom(recipient, recipientChatRoom);
                 chatRoom.setChatId(chatId);
                 saveChat(chatRoom);
                 return "Chat successfully saved!";
@@ -93,14 +87,6 @@ public class ChatRoomImplementation implements ChatRoomService {
         String[] ids = {senderId, recipientId};
         Arrays.sort(ids);
         return ids[0] + ids[1];
-    }
-
-    @Override
-    public void updateUserChatRoom(User userChats, ChatRoom chatRoom) {
-        List<ChatRoom> chatRoomList = userChats.getChatRoomList();
-        chatRoomList.add(chatRoom);
-        userChats.setChatRoomList(chatRoomList);
-        userService.updateUser(userChats);
     }
 
     @Override
@@ -121,4 +107,11 @@ public class ChatRoomImplementation implements ChatRoomService {
         repository.delete(chatRoom);
         return "Chat has been deleted!";
     }
+
+    @Override
+    public String getLastMessage(String chatId) {
+        ChatRoom chatRoom = findChatById(chatId);
+        return chatRoom.getLastMessage();
+    }
+
 }
