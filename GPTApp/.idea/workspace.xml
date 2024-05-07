@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7536ea80-5f96-442a-821a-5c75c766f61c" name="Changes" comment="" />
+    <list default="true" id="7536ea80-5f96-442a-821a-5c75c766f61c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../EnglishMessenger/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../EnglishMessenger/Makefile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../EnglishMessenger/Postgres/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EnglishMessenger/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../EnglishMessenger/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

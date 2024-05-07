@@ -1,0 +1,32 @@
+version: '2'
+
+services:
+  db:
+    build: EnglishMessenger/Postgres
+    image: postgres
+    container_name: db
+    environment:
+      POSTGRES_DB: my_db
+      POSTGRES_USER: danila
+      POSTGRES_PASSWORD: Danila241201
+  gpt_app:
+    container_name: gpt_app
+    build: GPTApp/.
+    ports:
+      - '8000:8000'
+    restart: always
+  app:
+    build:
+      dockerfile: EnglishMessenger/Dockerfile
+    image: 'docker-spring-boot-postgres:latest'
+    container_name: app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
