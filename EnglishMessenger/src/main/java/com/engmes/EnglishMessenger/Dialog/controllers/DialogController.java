@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,5 +23,10 @@ public class DialogController {
     @PostMapping("/generateDialog/{email}")
     public User generateDialog(@PathVariable String email) {
         return dialogService.generateDialog(email);
+    }
+
+    @GetMapping("/generateDialogTopic/{email}")
+    public ResponseEntity generateDialogTopic(@PathVariable String email) {
+        return dialogService.generateDialogTopic(email);
     }
 }

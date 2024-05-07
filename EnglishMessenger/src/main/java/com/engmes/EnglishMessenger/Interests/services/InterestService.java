@@ -9,4 +9,6 @@ public interface InterestService {
     List<Interest> getAllInterests();
 
     void saveInterest(Interest interest);
+
+    List<Interest> getUserInterests(String email);
 }
