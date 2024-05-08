@@ -14,7 +14,7 @@ jobs:
 
       - name: Build with Maven
         working-directory: ./EnglishMessenger
-        run: mvn clean install -DskipTests=true
+        run: ./mvnw clean package -DskipTests
   prepare-environment:
     runs-on: self-hosted
     needs: prepare
