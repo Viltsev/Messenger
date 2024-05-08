@@ -7,7 +7,7 @@ on:
 
 jobs:
   prepare:
-    runs-on: self-hosted
+    runs-on: ubuntu:latest
     steps:
       - name: Set up JDK
         uses: actions/setup-java@v2
@@ -20,7 +20,7 @@ jobs:
 
       - name: Build with Maven
         working-directory: ./EnglishMessenger
-        run: ./mvnw clean package -DskipTests
+        run: mvn clean install -DskipTests=true
   prepare-environment:
     runs-on: self-hosted
     needs: prepare
