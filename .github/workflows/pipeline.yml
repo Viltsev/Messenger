@@ -26,7 +26,7 @@ jobs:
     needs: prepare
     steps:
       - name: Stop and remove containers
-        working-directory: .
+        working-directory: ./Messenger
         run: docker compose down
       - name: Remove unused data
         run: docker system prune -a -f
@@ -37,8 +37,8 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
       - name: Build docker
-        working-directory: .
+        working-directory: ./Messenger
         run: docker compose build
       - name: Up docker
-        working-directory: .
+        working-directory: ./Messenger
         run: docker compose up
