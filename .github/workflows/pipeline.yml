@@ -5,9 +5,25 @@ on:
   pull_request:
     branches: [main]
 
-jobs:      
+jobs:
+  prepare:
+    runs-on: self-hosted
+    steps:
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Build with Maven
+        working-directory: ./EnglishMessenger
+        run: ./mvnw clean package -DskipTests
   prepare-environment:
     runs-on: self-hosted
+    needs: prepare
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -21,14 +37,6 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-      - name: Set up JDK
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '17'
-      - name: Build with Maven
-        working-directory: ./EnglishMessenger
-        run: ./mvnw clean package -DskipTests
       - name: Build docker
         run: docker compose build
       - name: Up docker
