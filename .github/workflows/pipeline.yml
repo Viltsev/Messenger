@@ -1,0 +1,30 @@
+name: deploy
+on:
+  push:
+    branches: [main]
+  pull_request: [main]
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build with Maven
+        uses: mvn clean install -DskipTests=true
+  prepare-environment:
+    runs-on: self-hosted
+    needs: prepare
+    steps:
+      - name: Stop and remove containers
+        run: docker compose down
+      - name: Remove unused data
+        run: docker system prune -a -f
+  deploy:
+    runs-on: self-hosted
+    needs: prepare-environment
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Build docker
+        uses: docker compose build
+      - name: Up docker
+        uses: docker compose up
