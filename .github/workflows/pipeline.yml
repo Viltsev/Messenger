@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Build with Maven
-        uses: mvn clean install -DskipTests=true
+        run: mvn clean install -DskipTests=true
   prepare-environment:
     runs-on: self-hosted
     needs: prepare
@@ -26,6 +26,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
       - name: Build docker
-        uses: docker compose build
+        run: docker compose build
       - name: Up docker
-        uses: docker compose up
+        run: docker compose up
