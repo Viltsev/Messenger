@@ -49,4 +49,4 @@ jobs:
         env: 
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }} 
       - name: Up docker
-        run: docker-compose up -d
+        run: docker compose up -d
