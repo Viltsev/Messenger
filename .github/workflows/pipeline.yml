@@ -5,18 +5,9 @@ on:
   pull_request:
     branches: [main]
 
-jobs:
-  prepare:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up JDK
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '17'
+jobs:      
   prepare-environment:
     runs-on: self-hosted
-    needs: prepare
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -30,6 +21,11 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
       - name: Build with Maven
         working-directory: ./EnglishMessenger
         run: ./mvnw clean package -DskipTests
