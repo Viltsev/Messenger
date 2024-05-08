@@ -29,6 +29,25 @@ jobs:
       - name: Build with Maven
         working-directory: ./EnglishMessenger
         run: ./mvnw clean package -DskipTests
+      - name: Create spring env file
+        run: |
+          touch .env
+          echo POSTGRES_URL=${POSTGRES_URL} >> .env
+          echo POSTGRES_USERNAME=${POSTGRES_USERNAME} >> .env
+          echo POSTGRES_PASSWORD=${POSTGRES_PASSWORD} >> .env
+          cat .env
+        env: 
+          POSTGRES_URL: ${{ secrets.SPRING_DATASOURCE_URL }} 
+          POSTGRES_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }} 
+          POSTGRES_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
+      - name: Create python env file
+        working-directory: ./GPTApp
+        run: |
+          touch .env
+          echo OPENAI_API_KEY=${OPENAI_API_KEY} >> .env
+          cat .env
+        env: 
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }} 
       - name: Build docker
         run: docker compose build
       - name: Up docker
