@@ -26,7 +26,7 @@ jobs:
     needs: prepare
     steps:
       - name: Stop and remove containers
-        run: docker compose -f ./docker-compose.yml down
+        run: docker compose -f . down
       - name: Remove unused data
         run: docker system prune -a -f
   deploy:
@@ -36,6 +36,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
       - name: Build docker
-        run: docker compose -f ./docker-compose.yml build
+        run: docker compose -f . build
       - name: Up docker
-        run: docker compose -f ./docker-compose.yml up
+        run: docker compose -f . up
