@@ -48,7 +48,5 @@ jobs:
           cat .env
         env: 
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }} 
-      - name: Build docker
-        run: docker compose build
       - name: Up docker
-        run: docker compose up
+        run: docker-compose up -d
