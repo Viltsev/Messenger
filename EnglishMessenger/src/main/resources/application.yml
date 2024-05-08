@@ -1,4 +1,6 @@
 ## viltsev database
+server:
+  port: 8081
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/my_db

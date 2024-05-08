@@ -21,7 +21,7 @@ services:
     image: 'docker-spring-boot-postgres:latest'
     container_name: app
     ports:
-      - "8080:8080"
+      - "8081:8081"
     depends_on:
       - db
     environment:
