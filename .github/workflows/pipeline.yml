@@ -9,6 +9,12 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     steps:
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
       - name: Checkout repo
         uses: actions/checkout@v3
 
