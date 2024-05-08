@@ -7,8 +7,14 @@ on:
 
 jobs:
   prepare:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu:latest
     steps:
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
       - name: Checkout repo
         uses: actions/checkout@v3
 
@@ -19,6 +25,8 @@ jobs:
     runs-on: self-hosted
     needs: prepare
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
       - name: Stop and remove containers
         run: docker compose down
       - name: Remove unused data
