@@ -11,4 +11,5 @@ public interface TheoryService {
     GrammarTheory scrapeTheory() throws IOException;
     GrammarTheory scrapeSortedTheory(String level);
     GrammarTheory getTheory();
+    String saveTheory(GrammarTheory theory) throws IOException;
 }

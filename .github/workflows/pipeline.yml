@@ -6,19 +6,11 @@ on:
     branches: [main]
 
 jobs:
-  prepare:
-    runs-on: ubuntu-latest
+  prepare-environment:
+    runs-on: self-hosted
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-
-      - name: Build with Maven
-        working-directory: ./EnglishMessenger
-        run: ./mvnw clean package -DskipTests
-  prepare-environment:
-    runs-on: self-hosted
-    needs: prepare
-    steps:
       - name: Stop and remove containers
         run: docker compose down
       - name: Remove unused data
@@ -29,7 +21,32 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-      - name: Build docker
-        run: docker compose build
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+      - name: Build with Maven
+        working-directory: ./EnglishMessenger
+        run: ./mvnw clean package -DskipTests
+      - name: Create spring env file
+        run: |
+          touch .env
+          echo SPRING_DATASOURCE_URL=${POSTGRES_URL} >> .env
+          echo SPRING_DATASOURCE_USERNAME=${POSTGRES_USERNAME} >> .env
+          echo SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD} >> .env
+          cat .env
+        env: 
+          POSTGRES_URL: ${{ secrets.SPRING_DATASOURCE_URL }} 
+          POSTGRES_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }} 
+          POSTGRES_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
+      - name: Create python env file
+        working-directory: ./GPTApp
+        run: |
+          touch .env
+          echo OPENAI_API_KEY=${OPENAI_API_KEY} >> .env
+          cat .env
+        env: 
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }} 
       - name: Up docker
-        run: docker compose up
+        run: docker compose up -d

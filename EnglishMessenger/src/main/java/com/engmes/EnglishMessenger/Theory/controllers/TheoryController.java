@@ -29,4 +29,9 @@ public class TheoryController {
     public GrammarTheory getTheory() {
         return service.getTheory();
     }
+
+    @PostMapping("/save_theory")
+    public String saveTheory(@RequestBody GrammarTheory theory) throws IOException {
+        return service.saveTheory(theory);
+    }
 }
