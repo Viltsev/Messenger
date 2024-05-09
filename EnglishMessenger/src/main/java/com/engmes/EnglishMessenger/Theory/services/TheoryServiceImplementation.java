@@ -117,10 +117,9 @@ public class TheoryServiceImplementation implements TheoryService {
     }
 
     @Override
-    public String saveTheory(List<Category> theory) throws IOException {
+    public String saveTheory(GrammarTheory theory) throws IOException {
         GrammarTheory grammarTheory = new GrammarTheory();
-        grammarTheory.setCategories(theory);
-        grammarTheory.setId(1L);
+        grammarTheory.setCategories(theory.getCategories());
         repository.save(grammarTheory);
         return "Theory successfully saved";
     }

@@ -31,7 +31,7 @@ public class TheoryController {
     }
 
     @PostMapping("/save_theory")
-    public String saveTheory(@RequestBody List<Category> theory) throws IOException {
+    public String saveTheory(@RequestBody GrammarTheory theory) throws IOException {
         return service.saveTheory(theory);
     }
 }

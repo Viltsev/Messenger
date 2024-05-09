@@ -1,6 +1,7 @@
 package com.engmes.EnglishMessenger.Theory.models;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.Data;
 
 import java.util.List;
