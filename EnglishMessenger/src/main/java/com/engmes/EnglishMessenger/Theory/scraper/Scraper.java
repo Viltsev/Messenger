@@ -26,8 +26,6 @@ public class Scraper {
     public List<Category> scrapeCategories(String mainUrl) throws IOException {
         Document doc = Jsoup
                 .connect(mainUrl)
-                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36")
-                .header("Accept-Language", "*")
                 .get();
 
         Elements categoriesElements = doc.select(".styles_topicCardWrapper__yd3fU");
