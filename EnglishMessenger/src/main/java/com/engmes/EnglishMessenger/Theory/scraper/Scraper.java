@@ -23,10 +23,15 @@ import java.util.regex.Pattern;
 public class Scraper {
     private static final Logger logger = LoggerFactory.getLogger(Scraper.class);
 
+    private String fetch(String url) throws IOException {
+        Document doc = Jsoup.connect(url).get();
+        return doc.html();
+    }
+
     public List<Category> scrapeCategories(String mainUrl) throws IOException {
-        Document doc = Jsoup
-                .connect(mainUrl)
-                .get();
+
+        String html = fetch(mainUrl);
+        Document doc = Jsoup.parse(html);
 
         Elements categoriesElements = doc.select(".styles_topicCardWrapper__yd3fU");
 
@@ -70,9 +75,8 @@ public class Scraper {
     }
 
     public List<Topic> scrapeTopics(String categoryUrl) throws IOException {
-        Document doc = Jsoup
-                .connect(categoryUrl)
-                .get();
+        String html = fetch(categoryUrl);
+        Document doc = Jsoup.parse(html);
 
         Elements topicsElements = doc.select(".styles_topicCardWrapper__yd3fU");
 
@@ -115,9 +119,8 @@ public class Scraper {
     }
 
     public List<Subtopic> scrapeSubtopics(String topicUrl) throws IOException {
-        Document doc = Jsoup
-                .connect(topicUrl)
-                .get();
+        String html = fetch(topicUrl);
+        Document doc = Jsoup.parse(html);
 
         Elements subtopicsElements = doc.select(".styles_topicCardWrapper__yd3fU");
 
@@ -155,10 +158,8 @@ public class Scraper {
     }
 
     public List<Theory> scrapeTheory(String theoryUrl) throws IOException {
-//        String mainUrl = "https://preply.com/en/learn/english/grammar/affixes";
-        Document doc = Jsoup
-                .connect(theoryUrl)
-                .get();
+        String html = fetch(theoryUrl);
+        Document doc = Jsoup.parse(html);
 
         Elements elements = doc.select("div._15uGWh.X4eHUe.TeMu3z._21X6IW._1pwa5v._23vtjf._1FM0S9._3-ZZug._2mguWZ._3aQPK_._2rnTIx._2QUxbW._1Wpc49");
 

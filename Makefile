@@ -27,6 +27,9 @@ setup:
 			endif
 	endif
 
+prepare:
+	cd ./EnglishMessenger && ./mvnw clean package -DskipTests
+
 up:
 	sudo docker-compose up
 
