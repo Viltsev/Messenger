@@ -13,6 +13,7 @@ public class Scraper {
     private static final Logger logger = LoggerFactory.getLogger(Scraper.class);
 
     List<Word> words = new ArrayList<>();
+    private Set<String> visitedUrls = new HashSet<>();
 
     private String fetch(String url) throws IOException {
         Document doc = Jsoup.connect(url).get();
@@ -54,14 +55,20 @@ public class Scraper {
     }
 
     private void processPage(String url) {
-        try {
-            String html = fetch(url);
-            Set<String> urls = extractUrls(html);
-            for (String link : urls) {
-                downloadPhrase(link);
+        if (visitedUrls.contains(url)) {
+            logger.info("URL already visited: " + url);
+            return;
+        } else {
+            try {
+                String html = fetch(url);
+                Set<String> urls = extractUrls(html);
+                for (String link : urls) {
+                    downloadPhrase(link);
+                }
+                visitedUrls.add(url);
+            } catch (IOException e) {
+                logger.warn("Error processing page: " + url);
             }
-        } catch (IOException e) {
-            logger.warn("Error processing page: " + url);
         }
     }
 

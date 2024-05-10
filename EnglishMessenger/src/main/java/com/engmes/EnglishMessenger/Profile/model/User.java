@@ -2,8 +2,6 @@ package com.engmes.EnglishMessenger.Profile.model;
 
 import com.engmes.EnglishMessenger.Cards.models.Card;
 import com.engmes.EnglishMessenger.Cards.models.CardSet;
-//import com.engmes.EnglishMessenger.Cards.models.Cards;
-import com.engmes.EnglishMessenger.Chats.model.ChatRoom;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -65,4 +63,7 @@ public class User {
     @JoinColumn(name = "cards_id_tld")
     @Column(name = "card_learned", nullable = true)
     private List<Card> cardsLearned;
+
+    @ElementCollection
+    private List<String> emailFriends;
 }
