@@ -22,6 +22,16 @@ public class FriendRequestService {
     @Autowired
     private UserService userService;
 
+    public ResponseEntity getFriends(String email) {
+        Optional<User> user = userService.findByEmail(email);
+
+        if(user.isPresent()) {
+            return ResponseEntity.ok(user.get().getEmailFriends());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Такого пользователя не существует.");
+        }
+    }
+
     public ResponseEntity getSentFriendRequests(String email) {
         Optional<User> user = userService.findByEmail(email);
 

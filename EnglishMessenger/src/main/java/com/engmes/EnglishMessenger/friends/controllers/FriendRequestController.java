@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.*;
 public class FriendRequestController {
     private final FriendRequestService friendRequestService;
 
+    @GetMapping("/getFriends/{email}")
+    public ResponseEntity getFriends(@PathVariable String email) {
+        return friendRequestService.getFriends(email);
+    }
+
     @GetMapping("/getSentRequests/{email}")
     public ResponseEntity getSentFriendRequests(@PathVariable String email) {
         return friendRequestService.getSentFriendRequests(email);
