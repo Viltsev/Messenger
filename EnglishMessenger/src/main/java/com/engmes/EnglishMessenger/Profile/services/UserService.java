@@ -1,30 +1,36 @@
 package com.engmes.EnglishMessenger.Profile.services;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.engmes.EnglishMessenger.Profile.config.AmazonConfig;
-import com.engmes.EnglishMessenger.Profile.utils.Base64DecodedMultipartFile;
+import com.engmes.EnglishMessenger.friends.model.FriendRequest;
 import com.engmes.EnglishMessenger.Profile.model.OnboardingInfo;
 import com.engmes.EnglishMessenger.Profile.model.User;
 import com.engmes.EnglishMessenger.Profile.repository.UserRepository;
+import com.engmes.EnglishMessenger.Profile.utils.Base64DecodedMultipartFile;
 import com.engmes.EnglishMessenger.Profile.utils.UniqueIdGenerator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.auth.AWSCredentials;
 import org.springframework.web.multipart.MultipartFile;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+
 import java.io.IOException;
-import org.springframework.web.bind.annotation.RequestBody;
-import java.util.*;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +40,7 @@ public class UserService implements UserDetailsService {
     private final AmazonConfig amazonConfig;
     private final UniqueIdGenerator idGenerator;
 
-    public Optional<User> findByEmail(String email){
+    public Optional<User> findByEmail(String email) {
         return Optional.ofNullable(userRepository.findByEmail(email));
     }
 
@@ -79,11 +85,11 @@ public class UserService implements UserDetailsService {
         List<User> userList = getAllUsers();
 
         Optional<User> foundUser = userList.stream()
-                                           .filter(user -> {
-                                               String userUsername = user.getUsername();
-                                               return userUsername != null && userUsername.equals(username);
-                                           })
-                                           .findFirst();
+                .filter(user -> {
+                    String userUsername = user.getUsername();
+                    return userUsername != null && userUsername.equals(username);
+                })
+                .findFirst();
 
         if (foundUser.isPresent()) {
             return foundUser.get();
@@ -92,7 +98,9 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public void updateUser(User user) { userRepository.save(user); }
+    public void updateUser(User user) {
+        userRepository.save(user);
+    }
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -101,8 +109,7 @@ public class UserService implements UserDetailsService {
     public int getLanguageLevel(User user) {
         if (user.getLanguageLevel() == null) {
             return 0;
-        }
-        else {
+        } else {
             String strLanguageLevel = user.getLanguageLevel();
 
             return switch (strLanguageLevel) {
@@ -127,7 +134,7 @@ public class UserService implements UserDetailsService {
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withEndpointConfiguration(
                         new AmazonS3ClientBuilder.EndpointConfiguration(
-                                "https://s3.timeweb.cloud","ru-1"
+                                "https://s3.timeweb.cloud", "ru-1"
                         )
                 )
                 .build();
