@@ -13,6 +13,7 @@ import com.engmes.EnglishMessenger.Profile.model.User;
 import com.engmes.EnglishMessenger.Profile.repository.UserRepository;
 import com.engmes.EnglishMessenger.Profile.utils.Base64DecodedMultipartFile;
 import com.engmes.EnglishMessenger.Profile.utils.UniqueIdGenerator;
+import com.engmes.EnglishMessenger.friends.services.FriendRequestService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -27,10 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -96,6 +94,26 @@ public class UserService implements UserDetailsService {
         } else {
             throw new UsernameNotFoundException("User with username " + username + " not found");
         }
+    }
+
+    public User findUserByEmail(String email) throws UsernameNotFoundException {
+        Optional<User> foundUser = findByEmail(email);
+        if (foundUser.isPresent()) {
+            return foundUser.get();
+        } else {
+            throw new UsernameNotFoundException("User with email " + email + " not found");
+        }
+    }
+
+    public List<User> getUsersFriends(String email) {
+        User currentUser = findUserByEmail(email);
+        List<String> friendsEmails = currentUser.getEmailFriends();
+        List<User> friends = new ArrayList<>();
+        friendsEmails.forEach(friendEmail -> {
+            User friend = findUserByEmail(friendEmail);
+            friends.add(friend);
+        });
+        return friends;
     }
 
     public void updateUser(User user) {

@@ -47,6 +47,12 @@ public class UserController {
         return userService.findUserByUsername(username);
     }
 
+    @GetMapping("/get_user_by_email/{email}")
+    public User getUserByEmail(@PathVariable String email) { return userService.findUserByEmail(email); }
+
+    @GetMapping("/get_friends/{email}")
+    public List<User> getFriends(@PathVariable String email) { return userService.getUsersFriends(email); }
+
     @PostMapping("/set_onboarding")
     public String setUserInfo(@RequestBody OnboardingInfo onboardingInfo) {
         userService.setOnboardingInfo(onboardingInfo);
