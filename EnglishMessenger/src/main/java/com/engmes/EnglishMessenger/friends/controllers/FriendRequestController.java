@@ -35,17 +35,17 @@ public class FriendRequestController {
 
 
     @GetMapping("/addingFriend/{email}")
-    public ResponseEntity addingFriend(@PathVariable String email, @RequestBody String requestedEmail) {
+    public ResponseEntity addingFriend(@PathVariable String email, @RequestParam String requestedEmail) {
         return friendRequestService.addingFriend(email, requestedEmail);
     }
 
     @PostMapping("/addingFriend/accepted/{email}")
-    public ResponseEntity acceptedFriending(@PathVariable String email, @RequestBody String sentEmail) {
+    public ResponseEntity acceptedFriending(@PathVariable String email, @RequestParam String sentEmail) {
         return friendRequestService.acceptedFriending(email, sentEmail);
     }
 
     @PostMapping("/addingFriend/rejected/{email}")
-    public ResponseEntity rejectedFriending(@PathVariable String email, @RequestBody String sentEmail) {
+    public ResponseEntity rejectedFriending(@PathVariable String email, @RequestParam String sentEmail) {
         return friendRequestService.rejectedFriending(email, sentEmail);
     }
 }
