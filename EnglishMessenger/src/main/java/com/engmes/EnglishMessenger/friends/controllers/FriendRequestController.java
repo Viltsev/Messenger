@@ -1,8 +1,11 @@
 package com.engmes.EnglishMessenger.friends.controllers;
+import com.engmes.EnglishMessenger.Profile.model.User;
 import com.engmes.EnglishMessenger.friends.services.FriendRequestService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -24,6 +27,12 @@ public class FriendRequestController {
     public ResponseEntity getReceivedFriendRequests(@PathVariable String email) {
         return friendRequestService.getReceivedFriendRequests(email);
     }
+
+    @GetMapping("/get_friends_requests/{email}")
+    public ResponseEntity getFriendsRequests(@PathVariable String email) {
+        return friendRequestService.getUsersFriendRequests(email);
+    }
+
 
     @GetMapping("/addingFriend/{email}")
     public ResponseEntity addingFriend(@PathVariable String email, @RequestBody String requestedEmail) {

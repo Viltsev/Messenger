@@ -7,9 +7,12 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,6 +62,21 @@ public class FriendRequestService {
             }
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Такого пользователя не существует.");
+        }
+    }
+
+    public ResponseEntity getUsersFriendRequests(String email) {
+        List<User> friendsRequests = new ArrayList<>();
+        ResponseEntity receivedFriendRequests = getReceivedFriendRequests(email);
+        if (receivedFriendRequests.getStatusCode() == HttpStatusCode.valueOf(200)) {
+            ResponseEntity<List<FriendRequest>> requests = receivedFriendRequests;
+            requests.getBody().forEach(friendRequest -> {
+                User currentRequestUser = userService.findUserByEmail(friendRequest.getSenderEmail());
+                friendsRequests.add(currentRequestUser);
+            });
+            return ResponseEntity.ok(friendsRequests);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Нет полученных запросов.");
         }
     }
 
