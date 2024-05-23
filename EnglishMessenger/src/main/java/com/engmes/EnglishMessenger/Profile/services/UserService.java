@@ -206,4 +206,15 @@ public class UserService implements UserDetailsService {
         PutObjectRequest request = new PutObjectRequest(bucketName, fileName, multipartFile.getInputStream(), null);
         amazonConfig.getAwsClient().putObject(request);
     }
+
+    public ResponseEntity<String> getUsername(String email) {
+        Optional<User> user = findByEmail(email);
+
+        if (user.isPresent()) {
+            return ResponseEntity.ok(user.get().getUsername());
+        } else {
+            // Если пользователь не найден, возвращаем ошибку 404
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+    }
 }

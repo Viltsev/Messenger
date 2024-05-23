@@ -11,4 +11,6 @@ public interface InterestService {
     void saveInterest(Interest interest);
 
     List<Interest> getUserInterests(String email);
+
+    String saveUserInterests(String email, List<Long> interestsList);
 }

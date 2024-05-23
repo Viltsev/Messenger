@@ -61,13 +61,6 @@ public class UserController {
 
     @PostMapping("/user/email")
     public ResponseEntity<String> getUsername(@RequestBody String email) {
-        Optional<User> user = userService.findByEmail(email);
-
-        if (user.isPresent()) {
-            return ResponseEntity.ok(user.get().getUsername());
-        } else {
-            // Если пользователь не найден, возвращаем ошибку 404
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
+       return userService.getUsername(email);
     }
 }
