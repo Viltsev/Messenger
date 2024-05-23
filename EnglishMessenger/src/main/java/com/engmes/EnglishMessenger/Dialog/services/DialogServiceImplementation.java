@@ -13,12 +13,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -32,31 +29,6 @@ public class DialogServiceImplementation implements DialogService {
     @Autowired
     private final InterestService interestService;
 
-    private int[] getUserVector(User user) {
-        int languageLevel = userService.getLanguageLevel(user);
-        List<Long> userInterests = user.getIdInterests();
-
-        int[] userVector = new int[userInterests.size() + 1];
-        userVector[0] = languageLevel;
-
-        int index = 1;
-        for (Long interest : userInterests) {
-            userVector[index++] = interest.intValue();
-        }
-
-        return userVector;
-    }
-
-    private double calcEuclideanDistance(int[] vector1, int[] vector2) {
-        int maxLength = Math.max(vector1.length, vector2.length);
-        double sum = 0.0;
-        for (int i = 0; i < maxLength; i++) {
-            int value1 = (i < vector1.length) ? vector1[i] : 0;
-            int value2 = (i < vector2.length) ? vector2[i] : 0;
-            sum += Math.pow(value1 - value2, 2);
-        }
-        return Math.sqrt(sum);
-    }
 
     @Override
     public User generateDialog(@RequestBody String email) {
@@ -65,27 +37,22 @@ public class DialogServiceImplementation implements DialogService {
 
         if (user.isPresent()) {
             User currentUser = user.get();
-            int[] currentUserVector = getUserVector(currentUser);
-
-            String closestUserEmail = null;
-            double minDistance = Double.MAX_VALUE;
-
+            int currentUserLanguageLevel = userService.getLanguageLevel(currentUser);
             List<User> userList = userService.getAllUsers();
 
+            List<User> sameLevelUsers = new ArrayList<>();
             for (User otherUser : userList) {
-                if (!otherUser.getEmail().equals(currentUser.getEmail())) {
-                    int[] otherUserVector = getUserVector(otherUser);
-                    double distance = calcEuclideanDistance(currentUserVector, otherUserVector);
-
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        closestUserEmail = otherUser.getEmail();
-                    }
+                if (!otherUser.getEmail().equals(currentUser.getEmail()) &&
+                        userService.getLanguageLevel(otherUser) == currentUserLanguageLevel) {
+                    sameLevelUsers.add(otherUser);
                 }
             }
 
-            Optional<User> closestUser = userService.findByEmail(closestUserEmail);
-            return closestUser.get();
+            if (!sameLevelUsers.isEmpty()) {
+                return findUserWithMostCommonInterests(currentUser, sameLevelUsers);
+            } else {
+                return findUserWithMostCommonInterests(currentUser, userList);
+            }
         } else {
             return null;
         }
@@ -97,29 +64,51 @@ public class DialogServiceImplementation implements DialogService {
 
         if (user.isPresent()) {
             User closestUser = generateDialog(email);
-            String emailClosestUser = closestUser.getEmail();
 
-            List<Interest> currentUserInterests = interestService.getUserInterests(email);
-            List<Interest> closestUserInterests = interestService.getUserInterests(emailClosestUser);
+            if (closestUser != null) {
+                String emailClosestUser = closestUser.getEmail();
 
-            currentUserInterests.retainAll(closestUserInterests);
+                List<Interest> currentUserInterests = interestService.getUserInterests(email);
+                List<Interest> closestUserInterests = interestService.getUserInterests(emailClosestUser);
 
-            if (currentUserInterests.isEmpty()) {
-                List<Interest> allInterests = interestService.getAllInterests();
-                if (!allInterests.isEmpty()) {
-                    int randomIndex = new Random().nextInt(allInterests.size());
-                    Interest randomInterest = allInterests.get(randomIndex);
+                currentUserInterests.retainAll(closestUserInterests);
+
+                if (currentUserInterests.isEmpty()) {
+                    int randomIndex = new Random().nextInt(currentUserInterests.size());
+                    Interest randomInterest = currentUserInterests.get(randomIndex);
                     return ResponseEntity.ok(randomInterest);
                 } else {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Список интересов пуст.");
+                    int randomIndex = new Random().nextInt(currentUserInterests.size());
+                    Interest randomInterest = currentUserInterests.get(randomIndex);
+                    return ResponseEntity.ok(randomInterest);
                 }
             } else {
-                int randomIndex = new Random().nextInt(currentUserInterests.size());
-                Interest randomInterest = currentUserInterests.get(randomIndex);
-                return ResponseEntity.ok(randomInterest);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Нет подходящих пользователей.");
             }
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Такого пользователя не существует.");
         }
+    }
+
+    private int countCommonInterests(User user1, User user2) {
+        Set<Long> interests1 = new HashSet<>(user1.getIdInterests());
+        Set<Long> interests2 = new HashSet<>(user2.getIdInterests());
+        interests1.retainAll(interests2);
+        return interests1.size();
+    }
+
+    private User findUserWithMostCommonInterests(User currentUser, List<User> userList) {
+        User closestUser = null;
+        int maxCommonInterests = -1;
+
+        for (User otherUser : userList) {
+            int commonInterests = countCommonInterests(currentUser, otherUser);
+            if (commonInterests > maxCommonInterests) {
+                maxCommonInterests = commonInterests;
+                closestUser = otherUser;
+            }
+        }
+
+        return closestUser;
     }
 }

@@ -1,4 +1,5 @@
 package com.engmes.EnglishMessenger.friends.services;
+
 import com.engmes.EnglishMessenger.Profile.model.User;
 import com.engmes.EnglishMessenger.Profile.services.UserService;
 import com.engmes.EnglishMessenger.friends.model.FriendRequest;
@@ -12,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +28,7 @@ public class FriendRequestService {
     public ResponseEntity getFriends(String email) {
         Optional<User> user = userService.findByEmail(email);
 
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             return ResponseEntity.ok(user.get().getEmailFriends());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Такого пользователя не существует.");
@@ -38,7 +38,7 @@ public class FriendRequestService {
     public ResponseEntity getSentFriendRequests(String email) {
         Optional<User> user = userService.findByEmail(email);
 
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             List<FriendRequest> friendsRequests = friendRequestRepository.findBySenderEmail(email);
             if (!friendsRequests.isEmpty()) {
                 return ResponseEntity.ok(friendsRequests);
@@ -53,7 +53,7 @@ public class FriendRequestService {
     public ResponseEntity getReceivedFriendRequests(String email) {
         Optional<User> user = userService.findByEmail(email);
 
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             List<FriendRequest> friendsRequests = friendRequestRepository.findByReceiverEmail(email);
             if (!friendsRequests.isEmpty()) {
                 return ResponseEntity.ok(friendsRequests);
@@ -85,6 +85,11 @@ public class FriendRequestService {
         Optional<User> requestedUser = userService.findByEmail(requestedEmail);
 
         if (user.isPresent() && requestedUser.isPresent()) {
+
+            if (user.get().getEmailFriends().contains(requestedEmail) && requestedUser.get().getEmailFriends().contains(email)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Пользователи уже являются друзьями.");
+            }
+
             FriendRequest friendRequest = new FriendRequest();
             friendRequest.setSenderEmail(user.get().getEmail());
             friendRequest.setReceiverEmail(requestedUser.get().getEmail());
@@ -118,8 +123,7 @@ public class FriendRequestService {
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Запроса на добавление в друзья не существует.");
             }
-        }
-        else {
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Такого пользователя не существует.");
         }
     }
@@ -138,8 +142,7 @@ public class FriendRequestService {
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Запроса на добавление в друзья не существует.");
             }
-        }
-        else {
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Такого пользователя не существует.");
         }
     }

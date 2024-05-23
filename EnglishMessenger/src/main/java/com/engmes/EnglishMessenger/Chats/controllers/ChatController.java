@@ -23,7 +23,6 @@ import java.util.List;
 public class ChatController {
     private final ChatRoomService chatRoomService;
 
-
     private static final Logger logger = LoggerFactory.getLogger(ChatController.class);
 
     @MessageMapping("/chat.sendMessage/{chatId}")
